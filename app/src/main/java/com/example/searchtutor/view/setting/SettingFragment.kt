@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.example.searchtutor.R
 
 
-class SettingFragment : Fragment() {
+class SettingFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -18,6 +18,10 @@ class SettingFragment : Fragment() {
         val root =  inflater.inflate(R.layout.fragment_setting, container, false)
 
         return root
+    }
+
+    override fun onClick(v: View) {
+
     }
 
 
