@@ -56,9 +56,10 @@
             android:src="@drawable/logout"
             android:layout_marginStart="8dp"
             android:layout_gravity="center"
-            app:tint="#9A9A9A" />
+            app:tint="#2E2E2E" />
 
         <TextView
+            android:textColor="#2E2E2E"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
