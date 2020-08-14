@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import com.example.searchtutor.R
 import com.example.searchtutor.controler.CustomProgressDialog
 import com.example.searchtutor.view.login.LoginActivity
+import com.example.searchtutor.view.main.MainActivity
 
 
 class SettingFragment : Fragment(), View.OnClickListener {
@@ -19,6 +20,18 @@ class SettingFragment : Fragment(), View.OnClickListener {
 
     private lateinit var mSettingPresenter: SettingPresenter
     private var dialog: CustomProgressDialog? = null
+
+    override fun onResume() {
+        super.onResume()
+        manageToolbar()
+/*
+        if (user?.type == "tutor") {
+            tutorZone()
+        } else if (user?.type == "user") {
+
+        }*/
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +46,19 @@ class SettingFragment : Fragment(), View.OnClickListener {
         btnLogout.setOnClickListener(this)
         return root
     }
+
+
+    @SuppressLint("SetTextI18n")
+    private fun manageToolbar() {
+
+        val tvTitle = (activity as MainActivity).getTvTitle()
+        val back = (activity as MainActivity).getBack()
+        val nav = (activity as MainActivity).getNav()
+        tvTitle.text = "ตั้งค่า"
+        back.visibility = View.GONE
+
+    }
+
 
     @SuppressLint("UseRequireInsteadOfGet")
     override fun onClick(v: View) {

@@ -45,6 +45,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private var mDialog = CustomDialog()
 
     private var cardView4: CardView? = null
+    private var cardView3: CardView? = null
 
     var ca_name = ""
     var g_id = ""
@@ -56,7 +57,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         if (user?.type == "tutor") {
             tutorZone()
         } else if (user?.type == "user") {
-
+            userZone()
         }
 
     }
@@ -86,6 +87,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         cardView4 = root.findViewById(R.id.cardView4)
         rvCourse = root.findViewById(R.id.rvCourse)
         tvCountCourse = root.findViewById(R.id.tvCountCourse)
+        cardView3 = root.findViewById(R.id.cardView3)
 
         btnAddCategory!!.setOnClickListener(this)
         btnEditCategory!!.setOnClickListener(this)
@@ -105,8 +107,19 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     }
 
-    private fun tutorZone() {
+    private fun userZone() {
+        // gone tutor zone
+        cardView3!!.visibility = View.GONE
+        cardView4!!.visibility = View.GONE
+        btnAddCategory!!.visibility = View.GONE
 
+
+
+    }
+
+    private fun tutorZone() {
+        cardView3!!.visibility = View.VISIBLE
+        btnAddCategory!!.visibility = View.VISIBLE
 
         mHomePresenter.getGroupCategory(
             user?.t_id.toString(),

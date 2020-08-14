@@ -74,11 +74,11 @@ class LoginActivity : AppCompatActivity() {
                         when (type) {
                             "user" -> {
                                 mLoginPresenter.addDataUserToPrefs(applicationContext, user, type)
-                                /*    val myIntent = Intent(applicationContext, MainActivity::class.java)
+                                    val myIntent = Intent(applicationContext, MainActivity::class.java)
                                     myIntent.putExtra("username", user!![0].st_username)
                                     myIntent.putExtra("type", type)
                                     startActivity(myIntent)
-                                    finish()*/
+                                    finish()
                                 Log.d("As6dasd", user!![0].st_username)
                             }
                             "tutor" -> {

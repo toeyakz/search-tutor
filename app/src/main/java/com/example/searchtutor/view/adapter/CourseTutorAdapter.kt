@@ -42,7 +42,7 @@ class CourseTutorAdapter(
     override fun onBindViewHolder(holder: ViewHolder, i: Int) {
 
         holder.tvNameCourse.text = item[i].gc_name
-        holder.tvPrice.text = item[i].gc_price.toString() + "บาท"
+        holder.tvPrice.text = item[i].gc_price.toString() + " บาท"
 
 
         /*  holder.itemView.setOnClickListener {
