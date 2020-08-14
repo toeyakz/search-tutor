@@ -61,5 +61,8 @@ dependencies {
     // Dexter Permission Management
     implementation 'com.karumi:dexter:6.0.2'
 
+    // Spinner
+    implementation 'com.github.ganfra:material-spinner:2.0.0'
+
 
 }

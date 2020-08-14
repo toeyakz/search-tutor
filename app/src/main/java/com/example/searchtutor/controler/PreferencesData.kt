@@ -9,104 +9,88 @@ class PreferencesData {
                 context.getSharedPreferences(Constants.PREFERENCES_USER, Context.MODE_PRIVATE)
             val session = prefs.getBoolean("session", false)
             val type = prefs.getString("type", "")
-            val U_id = prefs.getInt("U_id", 0)
-            val U_username = prefs.getString("U_username", "")
-            val U_password = prefs.getString("U_password", "")
-            val U_name = prefs.getString("U_name", "")
-            val U_lastname = prefs.getString("U_lastname", "")
-            val U_birth_day = prefs.getString("U_birth_day", "")
-            val U_email = prefs.getString("U_email", "")
-            val U_tel = prefs.getString("U_tel", "")
-            val U_img = prefs.getString("U_img", "")
+            val st_id = prefs.getInt("st_id", 0)
+            val st_username = prefs.getString("st_username", "")
+            val st_password = prefs.getString("st_password", "")
+            val st_name = prefs.getString("st_name", "")
+            val st_lname = prefs.getString("st_lname", "")
+            val st_email = prefs.getString("st_email", "")
+            val st_phon = prefs.getString("st_phon", "")
+            val st_address = prefs.getString("st_address", "")
+
             //admin
             val admin_id = prefs.getInt("admin_id", 0)
             val admin_username = prefs.getString("admin_username", "")
             val admin_password = prefs.getString("admin_password", "")
             //tutor
-            val T_id = prefs.getInt("T_id", 0)
-            val T_username = prefs.getString("T_username", "")
-            val T_password = prefs.getString("T_password", "")
-            val T_name = prefs.getString("T_name", "")
-            val T_lastname = prefs.getString("T_lastname", "")
-            val T_date = prefs.getString("T_date", "")
-            val T_education = prefs.getString("T_education", "")
-            val T_experience = prefs.getString("T_experience", "")
-            val T_expert = prefs.getString("T_expert", "")
-            val T_course = prefs.getString("T_course", "")
-            val T_address = prefs.getString("T_address", "")
-            val T_email = prefs.getString("T_email", "")
-            val T_tel = prefs.getString("T_tel", "")
-            val T_img = prefs.getString("T_img", "")
+            val t_id = prefs.getInt("t_id", 0)
+            val t_username = prefs.getString("t_username", "")
+            val t_password = prefs.getString("t_password", "")
+            val t_name = prefs.getString("t_name", "")
+            val t_lname = prefs.getString("t_lname", "")
+            val t_email = prefs.getString("t_email", "")
+            val t_tel = prefs.getString("t_tel", "")
+            val t_address = prefs.getString("t_address", "")
+
 
             return Users(
                 session,
                 type,
-                U_id,
-                U_username,
-                U_password,
-                U_name,
-                U_lastname
+                st_id,
+                st_username,
+                st_password,
+                st_name,
+                st_lname
                 ,
-                U_birth_day,
-                U_email,
-                U_tel,
-                U_img,
+                st_email,
+                st_phon,
+                st_address,
+
                 admin_id,
                 admin_username,
                 admin_password
                 ,
-                T_id,
-                T_username,
-                T_password,
-                T_name,
-                T_lastname,
-                T_date,
-                T_education,
-                T_experience,
-                T_expert,
-                T_course,
-                T_address,
-                T_email,
-                T_tel,
-                T_img
+                t_id,
+                t_username,
+                t_password,
+                t_name,
+                t_lname,
+                t_email,
+                t_tel,
+                t_address
             )
         }
 
 
     }
 
+
     data class Users(
         val session: Boolean? = false,
         val type: String? = null,
         //user
-        var U_id: Int? = null,
-        var U_username: String? = null,
-        var U_password: String? = null,
-        var U_name: String? = null,
-        var U_lastname: String? = null,
-        var U_birth_day: String? = null,
-        var U_email: String? = null,
-        var U_tel: String? = null,
-        var U_img: String? = null,
+        var st_id: Int? = null,
+        var st_username: String? = null,
+        var st_password: String? = null,
+        var st_name: String? = null,
+        var st_lname: String? = null,
+        var st_email: String? = null,
+        var st_phon: String? = null,
+        var st_address: String? = null,
+
         //admin
         var admin_id: Int? = null,
         var admin_username: String? = null,
         var admin_password: String? = null,
         //tutor
-        var T_id: Int? = null,
-        var T_username: String? = null,
-        var T_password: String? = null,
-        var T_name: String? = null,
-        var T_lastname: String? = null,
-        var T_date: String? = null,
-        var T_education: String? = null,
-        var T_experience: String? = null,
-        var T_expert: String? = null,
-        var T_course: String? = null,
-        var T_address: String? = null,
-        var T_email: String? = null,
-        var T_tel: String? = null,
-        var T_img: String? = null
+        var t_id: Int? = null,
+        var t_username: String? = null,
+        var t_password: String? = null,
+        var t_name: String? = null,
+        var t_lname: String? = null,
+        var t_email: String? = null,
+        var t_tel: String? = null,
+        var t_address: String? = null
     )
 
 

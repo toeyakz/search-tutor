@@ -1,7 +1,6 @@
 package com.example.searchtutor.data.api
 
-import com.example.searchtutor.data.response.LoginResponse
-import com.example.searchtutor.data.response.RegisterResponse
+import com.example.searchtutor.data.response.*
 import io.reactivex.Observable
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -84,16 +83,42 @@ interface APIService {
     fun deleteCourse(
         @Field("tutor_id") tutor_id: String,
         @Field("course_id") course_id: String
+    ): Observable<DeleteCourseResponse>*/
+
+
+    @POST("search_tutor/service.php?func=updateCourse")
+    fun updateCourse(@Body body: RequestBody): Observable<UpdateCourseResponse>
+
+
+    @FormUrlEncoded
+    @POST("search_tutor/service.php?func=deleteCourse")
+    fun deleteCourse(
+        @Field("gc_id") gc_id : String
     ): Observable<DeleteCourseResponse>
 
-    @POST("tutor/service.php?func=addCourse")
+    @POST("search_tutor/service.php?func=addCourse")
     fun addCourse(@Body body: RequestBody): Observable<AddCourseResponse>
 
     @FormUrlEncoded
-    @POST("tutor/service.php?func=getCourse")
-    fun getCourseFromTuTor(
+    @POST("search_tutor/service.php?func=getGroupCourse")
+    fun getGroupCourse(
+        @Field("g_id") g_id: String
+    ): Observable<GroupCourseResponse>
+
+    @POST("search_tutor/service.php?func=updateGroupCategory")
+    fun updateGroupCategory(@Body body: RequestBody): Observable<UpdateGroupCategoryResponse>
+
+    @POST("search_tutor/service.php?func=addGroupCategory")
+    fun addGroupCategory(@Body body: RequestBody): Observable<AddGroupCategoryResponse>
+
+    @POST("search_tutor/service.php?func=getCategory")
+    fun getCategory(): Observable<CategoryResponse>
+
+    @FormUrlEncoded
+    @POST("search_tutor/service.php?func=getGroupCategory")
+    fun getGroupCategory(
         @Field("tutor_id") tutor_id: String
-    ): Observable<CourseResponse>*/
+    ): Observable<CategoryNameResponse>
 
 
     @FormUrlEncoded
