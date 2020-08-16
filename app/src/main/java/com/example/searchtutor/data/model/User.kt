@@ -11,6 +11,7 @@ data class User (
     var st_email: String? = null,
     var st_phon: String? = null,
     var st_address: String? = null,
+    var st_img: String? = null,
     //admin
     var admin_id: Int? = null,
     var admin_username: String? = null,
@@ -23,5 +24,6 @@ data class User (
     var t_lname: String? = null,
     var t_email: String? = null,
     var t_tel: String? = null,
-    var t_address: String? = null
+    var t_address: String? = null,
+    var t_img: String? = null
 )

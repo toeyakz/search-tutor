@@ -2,34 +2,43 @@ package com.example.searchtutor.view.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.searchtutor.R
 import com.example.searchtutor.controler.CustomDialog
 import com.example.searchtutor.controler.PreferencesData
 import com.example.searchtutor.data.response.CategoryNameResponse
+import com.example.searchtutor.data.response.CategoryResponse
+import com.example.searchtutor.data.response.CommentResponse
 import com.example.searchtutor.data.response.GroupCourseResponse
+import com.example.searchtutor.view.adapter.CategoryAdapter
 import com.example.searchtutor.view.adapter.CourseTutorAdapter
+import com.example.searchtutor.view.adapter.GridAdapter
 import com.example.searchtutor.view.main.MainActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
-@Suppress("DEPRECATION")
+
+@Suppress("DEPRECATION", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class HomeFragment : Fragment(), View.OnClickListener {
 
     private var supportFragmentManager: FragmentManager? = null
     private var user: PreferencesData.Users? = null
     private lateinit var mHomePresenter: HomePresenter
     private lateinit var mCourseTutorAdapter: CourseTutorAdapter
+    private lateinit var mGridAdapter: GridAdapter
+    private lateinit var mCategoryAdapter: CategoryAdapter
 
     private var layoutNotNull: LinearLayout? = null
     private var layoutNull: LinearLayout? = null
@@ -46,6 +55,15 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     private var cardView4: CardView? = null
     private var cardView3: CardView? = null
+    private var cardView6: CardView? = null
+    private var gvCategory: RecyclerView? = null
+
+    //edit text
+    private lateinit var edtSearch: EditText
+    //image view
+    private lateinit var clearText: ImageView
+
+
 
     var ca_name = ""
     var g_id = ""
@@ -88,6 +106,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
         rvCourse = root.findViewById(R.id.rvCourse)
         tvCountCourse = root.findViewById(R.id.tvCountCourse)
         cardView3 = root.findViewById(R.id.cardView3)
+        gvCategory = root.findViewById(R.id.gvCategory)
+        edtSearch = root.findViewById(R.id.edtSearch)
+        clearText = root.findViewById(R.id.clearText)
+        cardView6 = root.findViewById(R.id.cardView6)
 
         btnAddCategory!!.setOnClickListener(this)
         btnEditCategory!!.setOnClickListener(this)
@@ -112,14 +134,108 @@ class HomeFragment : Fragment(), View.OnClickListener {
         cardView3!!.visibility = View.GONE
         cardView4!!.visibility = View.GONE
         btnAddCategory!!.visibility = View.GONE
+        cardView6!!.visibility = View.VISIBLE
+
+        mHomePresenter.getCategory(object : HomePresenter.Response.Category{
+            override fun value(c: CategoryResponse) {
+
+                clearText.setOnClickListener {
+                    edtSearch.text.clear()
+                }
+
+                edtSearch.addTextChangedListener(object : TextWatcher {
+                    override fun afterTextChanged(p0: Editable?) {
+                        filters(p0.toString(), c.data as ArrayList<CategoryResponse.Category>)
+
+                        if (p0.toString().isEmpty()) {
+                            clearText.visibility = View.GONE
+                        } else {
+                            clearText.visibility = View.VISIBLE
+                        }
+                    }
+
+                    override fun beforeTextChanged(
+                        p0: CharSequence?,
+                        p1: Int,
+                        p2: Int,
+                        p3: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        p0: CharSequence?,
+                        p1: Int,
+                        p2: Int,
+                        p3: Int
+                    ) {
+                    }
+                })
+                val list = ArrayList<CategoryResponse.Category>()
+                list.addAll(c.data!!)
+
+                val gridLayoutManager = GridLayoutManager(activity, 2)
+
+                mCategoryAdapter = CategoryAdapter(activity!!, list){ t,  s ->
+
+                    if(s){
+                        val bundle = Bundle()
+                        bundle.putString("ca_id", t["ca_id"])
+                        bundle.putString("ca_name", t["ca_name"])
+
+                        val tutorListFragment: TutorListFragment? =
+                            requireActivity().fragmentManager
+                                .findFragmentById(R.id.fragment_tutor_list) as TutorListFragment?
+
+                        if (tutorListFragment == null) {
+                            val newFragment = TutorListFragment()
+                            newFragment.arguments = bundle
+                            requireFragmentManager().beginTransaction()
+                                .replace(R.id.navigation_view, newFragment, "")
+                                .addToBackStack(null)
+                                .commit()
+                        } else {
+                            requireFragmentManager().beginTransaction()
+                                .replace(R.id.navigation_view, tutorListFragment, "")
+                                .addToBackStack(null)
+                                .commit()
+                        }
+
+                    }
+
+                }
+
+                gvCategory!!.apply {
+                    layoutManager = gridLayoutManager
+                    adapter = mCategoryAdapter
+                    mCategoryAdapter.notifyDataSetChanged()
+                }
+            }
+
+            override fun error(c: String?) {
+
+            }
+        })
 
 
+
+    }
+
+    private fun filters(toString: String, mCourseFromUserList: ArrayList<CategoryResponse.Category>) {
+        val list = ArrayList<CategoryResponse.Category>()
+
+        for (t in mCourseFromUserList) {
+            if (t.ca_name?.toLowerCase()!!.contains(toString.toLowerCase())) {
+                list.add(t)
+            }
+        }
+        mCategoryAdapter.filterList(list)
 
     }
 
     private fun tutorZone() {
         cardView3!!.visibility = View.VISIBLE
         btnAddCategory!!.visibility = View.VISIBLE
+        cardView6!!.visibility = View.GONE
 
         mHomePresenter.getGroupCategory(
             user?.t_id.toString(),
@@ -299,6 +415,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                         adapter = mCourseTutorAdapter
                                         mCourseTutorAdapter.notifyDataSetChanged()
                                     }
+
                                 }
 
                                 override fun error(c: String?) {

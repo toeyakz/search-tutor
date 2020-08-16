@@ -11,26 +11,23 @@ import android.widget.Button
 import android.widget.LinearLayout
 import com.example.searchtutor.R
 import com.example.searchtutor.controler.CustomProgressDialog
+import com.example.searchtutor.controler.PreferencesData
+import com.example.searchtutor.view.home.EditCourseFragment
 import com.example.searchtutor.view.login.LoginActivity
 import com.example.searchtutor.view.main.MainActivity
 
 
+@Suppress("DEPRECATION")
 class SettingFragment : Fragment(), View.OnClickListener {
 
 
     private lateinit var mSettingPresenter: SettingPresenter
     private var dialog: CustomProgressDialog? = null
+    private var user: PreferencesData.Users? = null
 
     override fun onResume() {
         super.onResume()
         manageToolbar()
-/*
-        if (user?.type == "tutor") {
-            tutorZone()
-        } else if (user?.type == "user") {
-
-        }*/
-
     }
 
     override fun onCreateView(
@@ -38,12 +35,22 @@ class SettingFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val root =  inflater.inflate(R.layout.fragment_setting, container, false)
-
+        val root = inflater.inflate(R.layout.fragment_setting, container, false)
+        user = PreferencesData.user(requireActivity())
         mSettingPresenter = SettingPresenter()
         val btnLogout: LinearLayout = root.findViewById(R.id.btnLogout)
+        val btnCommentList: LinearLayout = root.findViewById(R.id.btnCommentList)
+        val btnProfile: LinearLayout = root.findViewById(R.id.btnProfile)
+
+        if (user?.type == "tutor") {
+            btnCommentList.visibility = View.VISIBLE
+        } else {
+            btnCommentList.visibility = View.GONE
+        }
 
         btnLogout.setOnClickListener(this)
+        btnCommentList.setOnClickListener(this)
+        btnProfile.setOnClickListener(this)
         return root
     }
 
@@ -79,6 +86,60 @@ class SettingFragment : Fragment(), View.OnClickListener {
                             dialog?.dismiss()
                         }
                     }
+                }
+            }
+            R.id.btnCommentList -> {
+
+                val commentListFragment: CommentListFragment? =
+                    requireActivity().fragmentManager
+                        .findFragmentById(R.id.fragment_comment_list) as CommentListFragment?
+
+                if (commentListFragment == null) {
+                    val newFragment = CommentListFragment()
+                    requireFragmentManager().beginTransaction()
+                        .replace(
+                            R.id.navigation_view,
+                            newFragment,
+                            ""
+                        )
+                        .addToBackStack(null)
+                        .commit()
+                } else {
+                    requireFragmentManager().beginTransaction()
+                        .replace(
+                            R.id.navigation_view,
+                            commentListFragment,
+                            ""
+                        )
+                        .addToBackStack(null)
+                        .commit()
+                }
+            }
+            R.id.btnProfile -> {
+                val profileFragment: ProfileFragment? =
+                    requireActivity().fragmentManager
+                        .findFragmentById(R.id.fragment_profile) as ProfileFragment?
+
+                if (profileFragment == null) {
+                    val newFragment = ProfileFragment()
+
+                    requireFragmentManager().beginTransaction()
+                        .replace(
+                            R.id.navigation_view,
+                            newFragment,
+                            ""
+                        )
+                        .addToBackStack(null)
+                        .commit()
+                } else {
+                    requireFragmentManager().beginTransaction()
+                        .replace(
+                            R.id.navigation_view,
+                            profileFragment,
+                            ""
+                        )
+                        .addToBackStack(null)
+                        .commit()
                 }
             }
         }

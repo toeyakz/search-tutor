@@ -47,6 +47,114 @@ class HomePresenter {
             fun value(c: GroupCourseResponse)
             fun error(c: String?)
         }
+
+        interface TutorList {
+            fun value(c: TutorListResponse)
+            fun error(c: String?)
+        }
+
+        interface Comment {
+            fun value(c: CommentResponse)
+            fun error(c: String?)
+        }
+
+        interface AddComment {
+            fun value(c: AddCommentResponse)
+            fun error(c: String?)
+        }
+
+    }
+
+    @SuppressLint("CheckResult")
+    fun deleteComment(cm_id: String?, function: (Boolean, String) -> Unit) {
+
+        try {
+            DataModule.instance()!!.deleteComment(cm_id.toString())
+                .subscribeOn(Schedulers.io())
+                .timeout(20, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableObserver<DeleteCourseResponse>() {
+                    override fun onComplete() {
+                    }
+
+                    override fun onNext(t: DeleteCourseResponse) {
+                        function.invoke(true, t.message!!)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        function.invoke(false, e.message!!)
+                    }
+                })
+        } catch (e: Exception) {
+            function.invoke(false, e.message!!)
+            e.printStackTrace()
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    fun addComment(
+        t_id_key: String,
+        t_id: String,
+        st_id: String,
+        cm_detail: String,
+        response: Response.AddComment
+    ) {
+        DataModule.instance()!!.addComment(t_id_key, t_id, st_id, cm_detail)
+            .subscribeOn(Schedulers.io())
+            .timeout(20, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<AddCommentResponse>() {
+                override fun onComplete() {
+                }
+
+                override fun onNext(t: AddCommentResponse) {
+                    response.value(t)
+                }
+
+                override fun onError(e: Throwable) {
+                    response.error(e.message)
+                }
+            })
+    }
+
+    @SuppressLint("CheckResult")
+    fun getComment(t_id: String, response: Response.Comment) {
+        DataModule.instance()!!.getComment(t_id)
+            .subscribeOn(Schedulers.io())
+            .timeout(20, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<CommentResponse>() {
+                override fun onComplete() {
+                }
+
+                override fun onNext(t: CommentResponse) {
+                    response.value(t)
+                }
+
+                override fun onError(e: Throwable) {
+                    response.error(e.message)
+                }
+            })
+    }
+
+    @SuppressLint("CheckResult")
+    fun getTutorList(ca_id: String, response: Response.TutorList) {
+        DataModule.instance()!!.getTutorList(ca_id)
+            .subscribeOn(Schedulers.io())
+            .timeout(20, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<TutorListResponse>() {
+                override fun onComplete() {
+                }
+
+                override fun onNext(t: TutorListResponse) {
+                    response.value(t)
+                }
+
+                override fun onError(e: Throwable) {
+                    response.error(e.message)
+                }
+            })
     }
 
     @SuppressLint("CheckResult")

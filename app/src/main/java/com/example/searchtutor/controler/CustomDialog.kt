@@ -45,6 +45,10 @@ class CustomDialog {
 
         alertDialog.show()
 
+        if(oneBtn){
+            mDialogView.btnEdit.visibility = View.GONE
+        }
+
         mDialogView.btnDeleteCourse.setOnClickListener {
             callBack.invoke("delete")
             alertDialog.dismiss()

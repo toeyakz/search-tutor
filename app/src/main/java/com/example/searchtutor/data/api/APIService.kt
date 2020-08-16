@@ -1,5 +1,6 @@
 package com.example.searchtutor.data.api
 
+import com.example.searchtutor.data.body.UploadProfile
 import com.example.searchtutor.data.response.*
 import io.reactivex.Observable
 import okhttp3.RequestBody
@@ -84,6 +85,48 @@ interface APIService {
         @Field("tutor_id") tutor_id: String,
         @Field("course_id") course_id: String
     ): Observable<DeleteCourseResponse>*/
+
+    @POST("search_tutor/service.php?func=setProfileEdit")
+    fun upLoadProfile(@Body body: UploadProfile): Observable<ImageReturn>
+
+    @FormUrlEncoded
+    @POST("search_tutor/service.php?func=getTutor")
+    fun getTutor(
+        @Field("t_id") t_id : String
+    ): Observable<TutorResponse>
+
+    @FormUrlEncoded
+    @POST("search_tutor/service.php?func=getStudent")
+    fun getStudent(
+        @Field("st_id") st_id : String
+    ): Observable<StudentResponse>
+
+    @FormUrlEncoded
+    @POST("search_tutor/service.php?func=deleteComment")
+    fun deleteComment(
+        @Field("cm_id") cm_id : String
+    ): Observable<DeleteCourseResponse>
+
+    @FormUrlEncoded
+    @POST("search_tutor/service.php?func=addComment")
+    fun addComment(
+        @Field("t_id_key") t_id_key: String,
+        @Field("t_id") t_id: String,
+        @Field("st_id") st_id: String,
+        @Field("cm_detail") cm_detail: String
+    ): Observable<AddCommentResponse>
+
+    @FormUrlEncoded
+    @POST("search_tutor/service.php?func=getComment")
+    fun getComment(
+        @Field("t_id") t_id: String
+    ): Observable<CommentResponse>
+
+    @FormUrlEncoded
+    @POST("search_tutor/service.php?func=getTutorList")
+    fun getTutorList(
+        @Field("ca_id") ca_id: String
+    ): Observable<TutorListResponse>
 
 
     @POST("search_tutor/service.php?func=updateCourse")
