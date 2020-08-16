@@ -20,9 +20,13 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import com.example.searchtutor.R
 import com.example.searchtutor.controler.PreferencesData
+import com.example.searchtutor.controler.Utils
+import com.example.searchtutor.data.response.StudentResponse
+import com.example.searchtutor.data.response.TutorResponse
 import com.example.searchtutor.view.main.MainActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.squareup.picasso.Picasso
+import okhttp3.internal.Util
 import java.io.File
 import java.lang.Exception
 
@@ -34,7 +38,7 @@ class ProfileEditFragment : Fragment() {
     private lateinit var mSettingPresenter: SettingPresenter
     private var user: PreferencesData.Users? = null
 
-    private lateinit var imageName: File
+    private var imageName: File? = null
 
     private val PICK_IMAGE = 1001
 
@@ -76,64 +80,163 @@ class ProfileEditFragment : Fragment() {
     }
 
     private fun setData() {
-        if(user?.type == "tutor"){
-            edtName!!.setText(user?.t_name)
-            edtLastname!!.setText(user?.t_lname)
-            edtEmail!!.setText(user?.t_email)
-            edtTel!!.setText(user?.t_tel)
-            edtAddress!!.setText(user?.t_address)
-        }else{
-            edtName!!.setText(user?.st_name)
-            edtLastname!!.setText(user?.st_lname)
-            edtEmail!!.setText(user?.st_email)
-            edtTel!!.setText(user?.st_phon)
-            edtAddress!!.setText(user?.st_address)
+        if (user?.type == "tutor") {
+            mSettingPresenter.getTutor(
+                user?.t_id.toString(),
+                object : SettingPresenter.Response.Tutor {
+                    override fun value(c: TutorResponse) {
+
+                        Picasso.get()
+                            .load(Utils.host + "search_tutor/img_profile/" + c.data!![0].t_img)
+                            .into(imgProfile)
+
+
+                        edtName!!.setText(
+                            c.data[0].t_name
+                        )
+                        edtLastname!!.setText(c.data[0].t_lname)
+                        edtEmail!!.setText(c.data[0].t_email)
+                        edtTel!!.setText(c.data[0].t_tel)
+                        edtAddress!!.setText(c.data[0].t_address)
+
+
+                        btnRegister!!.setOnClickListener {
+                            mSettingPresenter.upLoadBankDetails(
+                                user?.type!!,
+                                user?.t_id.toString(),
+                                edtName!!.text.toString(),
+                                edtLastname!!.text.toString(),
+                                edtEmail!!.text.toString(),
+                                edtTel!!.text.toString(),
+                                edtAddress!!.text.toString(),
+                                c.data[0].t_img.toString(),
+                                imageName
+                            ) {
+                                if (it) {
+                                    requireFragmentManager().popBackStack()
+                                    Toast.makeText(
+                                        activity,
+                                        "บันทึกข้อมูลบัญชีสำเร็จ!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(activity, "พบข้อผิดพลาด!", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                        }
+
+                    }
+
+                    override fun error(c: String?) {
+
+                    }
+                })
+        } else {
+            mSettingPresenter.getStudent(
+                user?.st_id.toString(),
+                object : SettingPresenter.Response.Student {
+                    override fun value(c: StudentResponse) {
+
+                        Picasso.get()
+                            .load(Utils.host + "search_tutor/img_profile/" + c.data!![0].st_img)
+                            .into(imgProfile)
+
+                        edtName!!.setText(c.data[0].st_name)
+                        edtLastname!!.setText(c.data[0].st_lname)
+                        edtEmail!!.setText(c.data[0].st_email)
+                        edtTel!!.setText(c.data[0].st_phon)
+                        edtAddress!!.setText(c.data[0].st_address)
+
+                        btnRegister!!.setOnClickListener {
+
+                            mSettingPresenter.upLoadBankDetails(
+                                user?.type!!,
+                                user?.st_id.toString(),
+                                edtName!!.text.toString(),
+                                edtLastname!!.text.toString(),
+                                edtEmail!!.text.toString(),
+                                edtTel!!.text.toString(),
+                                edtAddress!!.text.toString(),
+                                c.data[0].st_img.toString(),
+                                imageName
+                            ) {
+                                if (it) {
+                                    requireFragmentManager().popBackStack()
+                                    Toast.makeText(
+                                        activity,
+                                        "บันทึกข้อมูลบัญชีสำเร็จ!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(activity, "พบข้อผิดพลาด!", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                        }
+                    }
+
+                    override fun error(c: String?) {
+
+                    }
+                })
         }
 
         imgChooseImage!!.setOnClickListener {
             val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(i, PICK_IMAGE)
         }
-        btnRegister!!.setOnClickListener {
-            if(user?.type == "tutor"){
-                mSettingPresenter.upLoadBankDetails(
-                    user?.type!!,
-                    user?.t_id.toString(),
-                    edtName!!.text.toString(),
-                    edtLastname!!.text.toString(),
-                    edtEmail!!.text.toString(),
-                    edtTel!!.text.toString(),
-                    edtAddress!!.text.toString(),
-                    imageName
-                ){
-                    if(it){
-                        requireFragmentManager().popBackStack()
-                        Toast.makeText(activity, "บันทึกข้อมูลบัญชีสำเร็จ!", Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(activity, "พบข้อผิดพลาด!", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }else{
-                mSettingPresenter.upLoadBankDetails(
-                    user?.type!!,
-                    user?.st_id.toString(),
-                    edtName!!.text.toString(),
-                    edtLastname!!.text.toString(),
-                    edtEmail!!.text.toString(),
-                    edtTel!!.text.toString(),
-                    edtAddress!!.text.toString(),
-                    imageName
-                ){
-                    if(it){
-                        requireFragmentManager().popBackStack()
-                        Toast.makeText(activity, "บันทึกข้อมูลบัญชีสำเร็จ!", Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(activity, "พบข้อผิดพลาด!", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
+        /* btnRegister!!.setOnClickListener {
+             if(user?.type == "tutor"){
+                 mSettingPresenter.getTutor(user?.t_id.toString(), object : SettingPresenter.Response.Tutor{
+                     override fun value(c: TutorResponse) {
 
-        }
+                     }
+
+                     override fun error(c: String?) {
+
+                     }
+                 })
+
+             }else{
+
+                 mSettingPresenter.getStudent(user?.st_id.toString(), object : SettingPresenter.Response.Student{
+                     override fun value(c: StudentResponse) {
+
+                         edtName!!.setText(c.data!![0].st_name)
+                         edtLastname!!.setText(c.data[0].st_lname)
+                         edtEmail!!.setText(c.data[0].st_email)
+                         edtTel!!.setText(c.data[0].st_phon)
+                         edtAddress!!.setText(c.data[0].st_address)
+
+                         mSettingPresenter.upLoadBankDetails(
+                             user?.type!!,
+                             user?.st_id.toString(),
+                             edtName!!.text.toString(),
+                             edtLastname!!.text.toString(),
+                             edtEmail!!.text.toString(),
+                             edtTel!!.text.toString(),
+                             edtAddress!!.text.toString(),
+                             c.data[0].st_img.toString(),
+                             imageName
+                         ){
+                             if(it){
+                                 requireFragmentManager().popBackStack()
+                                 Toast.makeText(activity, "บันทึกข้อมูลบัญชีสำเร็จ!", Toast.LENGTH_SHORT).show()
+                             }else{
+                                 Toast.makeText(activity, "พบข้อผิดพลาด!", Toast.LENGTH_SHORT).show()
+                             }
+                         }
+                     }
+
+                     override fun error(c: String?) {
+
+                     }
+                 })
+
+             }
+
+         }*/
 
     }
 
@@ -146,19 +249,25 @@ class ProfileEditFragment : Fragment() {
 
                 val filePath = arrayOf(MediaStore.Images.Media.DATA)
                 val cursor: Cursor =
-                    requireActivity().contentResolver.query(pickedImage, filePath, null, null, null)!!
+                    requireActivity().contentResolver.query(
+                        pickedImage,
+                        filePath,
+                        null,
+                        null,
+                        null
+                    )!!
                 cursor.moveToFirst()
                 val imagePath: String = cursor.getString(cursor.getColumnIndex(filePath[0]))
                 val options = BitmapFactory.Options()
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888
                 val bitmap = BitmapFactory.decodeFile(imagePath, options)
 
-                Log.d("As5da1sda", File(imagePath).absolutePath )
+                Log.d("As5da1sda", File(imagePath).absolutePath)
                 imageName = File(imagePath)
 
-                Picasso.get().load(imageName).into(imgProfile)
+                Picasso.get().load(imageName!!).into(imgProfile)
 
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 

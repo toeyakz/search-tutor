@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.example.searchtutor.data.api.DataModule
 import com.example.searchtutor.data.response.*
+import com.example.searchtutor.view.setting.SettingPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
@@ -63,6 +64,26 @@ class HomePresenter {
             fun error(c: String?)
         }
 
+    }
+
+    @SuppressLint("CheckResult")
+    fun getTutor(t_id: String, response: SettingPresenter.Response.Tutor) {
+        DataModule.instance()!!.getTutor(t_id)
+            .subscribeOn(Schedulers.io())
+            .timeout(20, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<TutorResponse>() {
+                override fun onComplete() {
+                }
+
+                override fun onNext(t: TutorResponse) {
+                    response.value(t)
+                }
+
+                override fun onError(e: Throwable) {
+                    response.error(e.message)
+                }
+            })
     }
 
     @SuppressLint("CheckResult")

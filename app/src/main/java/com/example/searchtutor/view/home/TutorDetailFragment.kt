@@ -17,14 +17,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.searchtutor.R
 import com.example.searchtutor.controler.CustomDialog
 import com.example.searchtutor.controler.PreferencesData
-import com.example.searchtutor.data.response.AddCommentResponse
-import com.example.searchtutor.data.response.CategoryNameResponse
-import com.example.searchtutor.data.response.CommentResponse
-import com.example.searchtutor.data.response.GroupCourseResponse
+import com.example.searchtutor.controler.Utils
+import com.example.searchtutor.data.response.*
 import com.example.searchtutor.view.adapter.CommentAdapter
 import com.example.searchtutor.view.adapter.CommentStudentAdapter
 import com.example.searchtutor.view.adapter.CourseTutorAdapter
 import com.example.searchtutor.view.main.MainActivity
+import com.example.searchtutor.view.setting.SettingPresenter
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_tutor_detail.*
 import java.util.ArrayList
 
@@ -46,6 +46,8 @@ class TutorDetailFragment : Fragment() {
     private var rvComment: RecyclerView? = null
     private var edtComment: EditText? = null
     private var imgSendComment: ImageView? = null
+    private var imgProfileTutor: ImageView? = null
+
 
     private var mDialog = CustomDialog()
 
@@ -76,6 +78,7 @@ class TutorDetailFragment : Fragment() {
         rvComment = root.findViewById(R.id.rvComment)
         edtComment = root.findViewById(R.id.edtComment)
         imgSendComment = root.findViewById(R.id.imgSendComment)
+        imgProfileTutor = root.findViewById(R.id.imgProfileTutor)
 
         val bundle = arguments
         if (bundle != null) {
@@ -92,6 +95,24 @@ class TutorDetailFragment : Fragment() {
                         mHomePresenter.getGroupCourse(c.data[0].g_id.toString(),
                             object : HomePresenter.Response.GroupCourse {
                                 override fun value(c: GroupCourseResponse) {
+
+                                    mHomePresenter.getTutor(c.data!![0].t_id.toString(), object : SettingPresenter.Response.Tutor{
+                                        override fun value(c: TutorResponse) {
+                                            if(c.data!![0].t_img != ""){
+                                                Picasso.get().load(Utils.host+ "search_tutor/img_profile/"+c.data!![0].t_img).into(imgProfileTutor)
+                                            }else{
+                                                Picasso.get().load(R.drawable.testimonial_man).into(imgProfileTutor)
+                                            }
+
+                                        }
+
+                                        override fun error(c: String?) {
+
+                                        }
+                                    })
+
+
+
                                     tvCountCourse!!.text =
                                         "จำนวนคอร์ส: " + c.data!!.size.toString() + " คอร์ส"
 
@@ -110,6 +131,8 @@ class TutorDetailFragment : Fragment() {
                                     }
 
                                     t_id = c.data[0].t_id.toString()
+
+
                                     commentViewList()
                                 }
 

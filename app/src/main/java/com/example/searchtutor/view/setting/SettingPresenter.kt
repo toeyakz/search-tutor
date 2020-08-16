@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
 import com.example.searchtutor.controler.Constants
+import com.example.searchtutor.controler.Utils
 import com.example.searchtutor.data.api.DataModule
 import com.example.searchtutor.data.body.UploadProfile
 import com.example.searchtutor.data.response.*
@@ -17,13 +18,17 @@ import com.example.searchtutor.view.home.HomePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.concurrent.TimeUnit
 
 class SettingPresenter {
 
-    interface Response{
+    interface Response {
         interface Tutor {
             fun value(c: TutorResponse)
             fun error(c: String?)
@@ -45,14 +50,19 @@ class SettingPresenter {
         email: String,
         tel: String,
         address: String,
-        file: File,
+        img: String,
+        file: File?,
         res: (Boolean) -> Unit
     ) {
         val encodedImagePic1: String
         val uploadImage = ArrayList<UploadProfile.Data>()
 
-        if (file.absolutePath != "") {
-            val myBitmap = BitmapFactory.decodeFile(file.absolutePath)
+        val conTactArray = JSONArray()
+        val root = JSONObject()
+        val contact = JSONObject()
+
+        if (file?.absolutePath != "") {
+            val myBitmap = BitmapFactory.decodeFile(file?.absolutePath)
 
             if (myBitmap != null) {
                 Log.d("ASd6asd", myBitmap.toString())
@@ -70,7 +80,22 @@ class SettingPresenter {
                     Base64.DEFAULT
                 )
 
-                val uploadData = UploadProfile.Data(
+                contact.put("type", type)
+                contact.put("id_", id_)
+                contact.put("name", name)
+                contact.put("last_name", last_name)
+                contact.put("email", email)
+                contact.put("tel", tel)
+                contact.put("address", address)
+                contact.put("name_image", file!!.name)
+                contact.put("img_base64", "data:image/jpeg;base64,$encodedImagePic1")
+
+                conTactArray.put(0, contact)
+                root.put("data", conTactArray)
+
+
+
+        /*        val uploadData = UploadProfile.Data(
                     type,
                     id_,
                     name,
@@ -78,16 +103,55 @@ class SettingPresenter {
                     email,
                     tel,
                     address,
-                    file.name,
+                    file!!.name,
                     "data:image/jpeg;base64,$encodedImagePic1"
                 )
-                uploadImage.add(uploadData)
+                uploadImage.add(uploadData)*/
+            } else {
+
+                contact.put("type", type)
+                contact.put("id_", id_)
+                contact.put("name", name)
+                contact.put("last_name", last_name)
+                contact.put("email", email)
+                contact.put("tel", tel)
+                contact.put("address", address)
+                contact.put("name_image", img)
+                contact.put("img_base64", "")
+
+                conTactArray.put(0, contact)
+                root.put("data", conTactArray)
+
+      /*          val uploadData = UploadProfile.Data(
+                    type,
+                    id_,
+                    name,
+                    last_name,
+                    email,
+                    tel,
+                    address,
+                    img,
+                    "data:image/jpeg;base64,"
+                )
+                uploadImage.add(uploadData)*/
             }
-            /*      val json: String = Utils().getGson()!!.toJson(uploadImage)
-            Log.d("a9a20as8da", json)*/
+
+
         }
+
+        val rootToString: String = root.toString()
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            rootToString
+        )
+
+        val json: String = Utils().getGson()!!.toJson(body)
+        Log.d("a9a20as8da", json)
+
+
         DataModule.instance()!!
-            .upLoadProfile(UploadProfile(uploadImage))
+            //.upLoadProfile(UploadProfile(uploadImage))
+            .upLoadProfile(body)
             .subscribeOn(Schedulers.io())
             .timeout(20, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())

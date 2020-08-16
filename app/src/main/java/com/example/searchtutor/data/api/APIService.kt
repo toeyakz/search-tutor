@@ -87,7 +87,8 @@ interface APIService {
     ): Observable<DeleteCourseResponse>*/
 
     @POST("search_tutor/service.php?func=setProfileEdit")
-    fun upLoadProfile(@Body body: UploadProfile): Observable<ImageReturn>
+    fun upLoadProfile(@Body body: RequestBody): Observable<ImageReturn>
+   // fun upLoadProfile(@Body body: UploadProfile): Observable<ImageReturn>
 
     @FormUrlEncoded
     @POST("search_tutor/service.php?func=getTutor")
