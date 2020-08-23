@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.searchtutor.R
+import com.example.searchtutor.controler.Utils
 import com.example.searchtutor.data.response.CategoryResponse
 import com.example.searchtutor.data.response.CommentResponse
 import com.example.searchtutor.data.response.GroupCourseResponse
@@ -51,17 +52,15 @@ class CommentStudentAdapter(
         if (item[i].st_id != 0) {
             holder.tvName.text = item[i].st_name + " " + item[i].st_lname
             Picasso.get()
-                .load(R.drawable.student)
+                .load(Utils.host + "search_tutor/img_profile/" + item[i].st_img)
                 .into(holder.imgProfile)
 
 
         } else {
             Picasso.get()
-                .load(R.drawable.teacher)
+                .load(Utils.host + "search_tutor/img_profile/" + item[i].t_img)
                 .into(holder.imgProfile)
             holder.tvName.text = item[i].t_name + " " + item[i].t_lname
-
-
 
 
         }

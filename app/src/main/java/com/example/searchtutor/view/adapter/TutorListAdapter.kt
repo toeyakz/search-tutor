@@ -5,12 +5,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.searchtutor.R
+import com.example.searchtutor.controler.Utils
 import com.example.searchtutor.data.response.CategoryResponse
 import com.example.searchtutor.data.response.GroupCourseResponse
 import com.example.searchtutor.data.response.TutorListResponse
+import com.squareup.picasso.Picasso
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,6 +49,10 @@ class TutorListAdapter(
         // holder.tvNameCourse.text = item[i].gc_name
         holder.tvNameTutor.text = item[i].t_name + " " + item[i].t_lname
         holder.tvCountCourse.text = "จำนวนคอร์ส : " + item[i].count_course
+
+        Picasso.get()
+            .load(Utils.host + "search_tutor/img_profile/" + item[i].t_img)
+            .into(holder.imgProfile)
 
 
         holder.itemView.setOnClickListener {
@@ -83,6 +90,7 @@ class TutorListAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tvNameTutor: TextView = itemView.findViewById(R.id.tvNameTutor)
         var tvCountCourse: TextView = itemView.findViewById(R.id.tvCountCourse)
+        var imgProfile: ImageView = itemView.findViewById(R.id.imgProfile)
 
 
     }

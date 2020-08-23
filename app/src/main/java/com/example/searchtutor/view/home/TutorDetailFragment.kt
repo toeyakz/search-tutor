@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -47,6 +48,7 @@ class TutorDetailFragment : Fragment() {
     private var edtComment: EditText? = null
     private var imgSendComment: ImageView? = null
     private var imgProfileTutor: ImageView? = null
+    private var cardView9: CardView? = null
 
 
     private var mDialog = CustomDialog()
@@ -79,6 +81,7 @@ class TutorDetailFragment : Fragment() {
         edtComment = root.findViewById(R.id.edtComment)
         imgSendComment = root.findViewById(R.id.imgSendComment)
         imgProfileTutor = root.findViewById(R.id.imgProfileTutor)
+        cardView9 = root.findViewById(R.id.cardView9)
 
         val bundle = arguments
         if (bundle != null) {
@@ -99,7 +102,7 @@ class TutorDetailFragment : Fragment() {
                                     mHomePresenter.getTutor(c.data!![0].t_id.toString(), object : SettingPresenter.Response.Tutor{
                                         override fun value(c: TutorResponse) {
                                             if(c.data!![0].t_img != ""){
-                                                Picasso.get().load(Utils.host+ "search_tutor/img_profile/"+c.data!![0].t_img).into(imgProfileTutor)
+                                                Picasso.get().load(Utils.host+ "search_tutor/img_profile/"+c.data[0].t_img).into(imgProfileTutor)
                                             }else{
                                                 Picasso.get().load(R.drawable.testimonial_man).into(imgProfileTutor)
                                             }
@@ -152,6 +155,9 @@ class TutorDetailFragment : Fragment() {
     }
 
     private fun commentViewList() {
+        if(user?.type== "admin"){
+            cardView9!!.visibility = View.GONE
+        }
         mHomePresenter.getComment(t_id, object : HomePresenter.Response.Comment {
             override fun value(c: CommentResponse) {
                 if (c.isSuccessful) {

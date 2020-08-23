@@ -28,7 +28,8 @@
                 android:id="@+id/imgFood"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:srcCompat="@drawable/reminder" />
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/course" />
 
             <TextView
                 android:id="@+id/tvName"

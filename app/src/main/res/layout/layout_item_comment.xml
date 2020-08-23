@@ -13,14 +13,14 @@
         android:layout_marginEnd="8dp"
         android:orientation="horizontal">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgProfile"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginTop="8dp"
             android:src="@drawable/student" />
 
         <LinearLayout
+            android:layout_marginStart="3dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -58,7 +58,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="3dp"
                 android:text="20:53 15/08/2563"
-                android:textColor="#A1A1A1"
+                android:textColor="#958F8F"
                 android:textSize="10sp" />
 
 

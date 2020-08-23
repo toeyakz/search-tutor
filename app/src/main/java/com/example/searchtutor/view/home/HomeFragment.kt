@@ -72,10 +72,16 @@ class HomeFragment : Fragment(), View.OnClickListener {
         super.onResume()
         manageToolbar()
 
-        if (user?.type == "tutor") {
-            tutorZone()
-        } else if (user?.type == "user") {
-            userZone()
+        when (user?.type) {
+            "tutor" -> {
+                tutorZone()
+            }
+            "user" -> {
+                userZone()
+            }
+            else -> {
+                userZone()
+            }
         }
 
     }

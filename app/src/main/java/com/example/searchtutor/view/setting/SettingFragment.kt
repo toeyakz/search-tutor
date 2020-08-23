@@ -42,6 +42,9 @@ class SettingFragment : Fragment(), View.OnClickListener {
         val btnCommentList: LinearLayout = root.findViewById(R.id.btnCommentList)
         val btnProfile: LinearLayout = root.findViewById(R.id.btnProfile)
 
+        if(user?.type == "admin"){
+            btnProfile.visibility = View.GONE
+        }
         if (user?.type == "tutor") {
             btnCommentList.visibility = View.VISIBLE
         } else {

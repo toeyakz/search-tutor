@@ -75,6 +75,7 @@ data class TutorListResponse(
         val t_email: String?,
         val t_tel: Int?,
         val t_address: String?,
+        val t_img: String?,
         val count_course: Int?
     )
 }
@@ -91,8 +92,10 @@ data class CommentResponse(
         val cm_detail: String?,
         val st_name: String?,
         val st_lname: String?,
+        val st_img: String?,
         val t_name: String?,
         val t_lname: String?,
+        val t_img: String?,
         val cm_datetime: String?
     )
 }
