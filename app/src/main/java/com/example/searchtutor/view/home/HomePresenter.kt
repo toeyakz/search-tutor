@@ -114,13 +114,13 @@ class HomePresenter {
 
     @SuppressLint("CheckResult")
     fun addComment(
-        t_id_key: String,
+        c_id_key: String,
         t_id: String,
         st_id: String,
         cm_detail: String,
         response: Response.AddComment
     ) {
-        DataModule.instance()!!.addComment(t_id_key, t_id, st_id, cm_detail)
+        DataModule.instance()!!.addComment(c_id_key, t_id, st_id, cm_detail)
             .subscribeOn(Schedulers.io())
             .timeout(20, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())

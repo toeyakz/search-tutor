@@ -45,17 +45,18 @@ class CourseTutorAdapter(
         holder.tvPrice.text = item[i].gc_price.toString() + " บาท"
 
 
-        /*  holder.itemView.setOnClickListener {
+          holder.itemView.setOnClickListener {
               val myMap = HashMap<String, String>()
-              myMap["Cr_id"] = item[i].Cr_id.toString()
-              myMap["Cr_name"] = item[i].Cr_name.toString()
-              myMap["Cr_price"] = item[i].Cr_price.toString()
-              myMap["Cr_info"] = item[i].Cr_info.toString()
-              myMap["Cr_data_time"] = item[i].Cr_data_time.toString()
+              myMap["gc_id"] = item[i].gc_id.toString()
+              myMap["g_id"] = item[i].g_id.toString()
+              myMap["t_id"] = item[i].t_id.toString()
+              myMap["gc_name"] = item[i].gc_name.toString()
+              myMap["gc_detail"] = item[i].gc_detail.toString()
+              myMap["gc_price"] = item[i].gc_price.toString()
               mOnClickList.invoke(myMap, true)
-          } */
+          }
 
-        holder.itemView.setOnLongClickListener {
+/*        holder.itemView.setOnLongClickListener {
             val myMap = HashMap<String, String>()
             myMap["gc_id"] = item[i].gc_id.toString()
             myMap["g_id"] = item[i].g_id.toString()
@@ -65,7 +66,7 @@ class CourseTutorAdapter(
             myMap["gc_price"] = item[i].gc_price.toString()
             mOnClickList.invoke(myMap, false)
             true
-        }
+        }*/
 
     }
 

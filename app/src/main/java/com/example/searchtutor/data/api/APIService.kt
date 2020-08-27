@@ -111,7 +111,7 @@ interface APIService {
     @FormUrlEncoded
     @POST("search_tutor/service.php?func=addComment")
     fun addComment(
-        @Field("t_id_key") t_id_key: String,
+        @Field("c_id_key") c_id_key: String,
         @Field("t_id") t_id: String,
         @Field("st_id") st_id: String,
         @Field("cm_detail") cm_detail: String
@@ -120,7 +120,7 @@ interface APIService {
     @FormUrlEncoded
     @POST("search_tutor/service.php?func=getComment")
     fun getComment(
-        @Field("t_id") t_id: String
+        @Field("gc_id") gc_id: String
     ): Observable<CommentResponse>
 
     @FormUrlEncoded

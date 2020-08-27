@@ -124,7 +124,33 @@ class TutorDetailFragment : Fragment() {
                                             activity!!,
                                             c.data as ArrayList<GroupCourseResponse.GroupCourse>
                                         ) { h, b ->
+                                                if(b){
+                                                    val bundle22 = Bundle()
+                                                    bundle22.putString("gc_id", h["gc_id"])
+                                                    bundle22.putString("g_id", h["g_id"])
+                                                    bundle22.putString("t_id", h["t_id"])
+                                                    bundle22.putString("gc_name", h["gc_name"])
+                                                    bundle22.putString("gc_detail", h["gc_detail"])
+                                                    bundle22.putString("gc_price", h["gc_price"])
 
+                                                    val courseDetailsAndCommentFragment: CourseDetailsAndCommentFragment? =
+                                                        requireActivity().fragmentManager
+                                                            .findFragmentById(R.id.fragment_course_detail) as CourseDetailsAndCommentFragment?
+
+                                                    if (courseDetailsAndCommentFragment == null) {
+                                                        val newFragment = CourseDetailsAndCommentFragment()
+                                                        newFragment.arguments = bundle22
+                                                        requireFragmentManager().beginTransaction()
+                                                            .replace(R.id.navigation_view, newFragment, "")
+                                                            .addToBackStack(null)
+                                                            .commit()
+                                                    } else {
+                                                        requireFragmentManager().beginTransaction()
+                                                            .replace(R.id.navigation_view, courseDetailsAndCommentFragment, "")
+                                                            .addToBackStack(null)
+                                                            .commit()
+                                                    }
+                                                }
                                         }
 
                                     rvCourse!!.apply {
