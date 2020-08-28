@@ -60,9 +60,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     //edit text
     private lateinit var edtSearch: EditText
+
     //image view
     private lateinit var clearText: ImageView
-
 
 
     var ca_name = ""
@@ -142,7 +142,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         btnAddCategory!!.visibility = View.GONE
         cardView6!!.visibility = View.VISIBLE
 
-        mHomePresenter.getCategory(object : HomePresenter.Response.Category{
+        mHomePresenter.getCategory(object : HomePresenter.Response.Category {
             override fun value(c: CategoryResponse) {
 
                 clearText.setOnClickListener {
@@ -181,9 +181,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
                 val gridLayoutManager = GridLayoutManager(activity, 2)
 
-                mCategoryAdapter = CategoryAdapter(activity!!, list){ t,  s ->
+                mCategoryAdapter = CategoryAdapter(activity!!, list) { t, s ->
 
-                    if(s){
+                    if (s) {
                         val bundle = Bundle()
                         bundle.putString("ca_id", t["ca_id"])
                         bundle.putString("ca_name", t["ca_name"])
@@ -223,10 +223,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
         })
 
 
-
     }
 
-    private fun filters(toString: String, mCourseFromUserList: ArrayList<CategoryResponse.Category>) {
+    private fun filters(
+        toString: String,
+        mCourseFromUserList: ArrayList<CategoryResponse.Category>
+    ) {
         val list = ArrayList<CategoryResponse.Category>()
 
         for (t in mCourseFromUserList) {
@@ -277,36 +279,34 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                             // On click
                                             if (b) {
 
-                                                /*val bundle = Bundle()
+                                                val bundle = Bundle()
                                                 bundle.putString(
-                                                    "Cr_id",
-                                                    hashMap["Cr_id"].toString()
+                                                    "gc_id",
+                                                    hashMap["gc_id"].toString()
+                                                )
+                                                bundle.putString("g_id", hashMap["g_id"].toString())
+                                                bundle.putString("t_id", hashMap["t_id"].toString())
+                                                bundle.putString(
+                                                    "gc_name",
+                                                    hashMap["gc_name"].toString()
                                                 )
                                                 bundle.putString(
-                                                    "Cr_name",
-                                                    hashMap["Cr_name"].toString()
+                                                    "gc_detail",
+                                                    hashMap["gc_detail"].toString()
                                                 )
                                                 bundle.putString(
-                                                    "Cr_price",
-                                                    hashMap["Cr_price"].toString()
+                                                    "gc_price",
+                                                    hashMap["gc_price"].toString()
                                                 )
-                                                bundle.putString(
-                                                    "Cr_info",
-                                                    hashMap["Cr_info"].toString()
-                                                )
-                                                bundle.putString(
-                                                    "Cr_data_time",
-                                                    hashMap["Cr_data_time"].toString()
-                                                )
+                                                val courseDetailsAndCommentFragment: CourseDetailsAndCommentFragment? =
+                                                    requireActivity().fragmentManager
+                                                        .findFragmentById(R.id.fragment_course_detail) as CourseDetailsAndCommentFragment?
 
-                                                val detailCourseFragment: DetailCourseFragment? =
-                                                    activity!!.fragmentManager
-                                                        .findFragmentById(R.id.fragment_add_course) as DetailCourseFragment?
-
-                                                if (detailCourseFragment == null) {
-                                                    val newFragment = DetailCourseFragment()
+                                                if (courseDetailsAndCommentFragment == null) {
+                                                    val newFragment =
+                                                        CourseDetailsAndCommentFragment()
                                                     newFragment.arguments = bundle
-                                                    fragmentManager!!.beginTransaction()
+                                                    requireFragmentManager().beginTransaction()
                                                         .replace(
                                                             R.id.navigation_view,
                                                             newFragment,
@@ -315,15 +315,41 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                                         .addToBackStack(null)
                                                         .commit()
                                                 } else {
-                                                    fragmentManager!!.beginTransaction()
+                                                    requireFragmentManager().beginTransaction()
                                                         .replace(
                                                             R.id.navigation_view,
-                                                            detailCourseFragment,
+                                                            courseDetailsAndCommentFragment,
                                                             ""
                                                         )
                                                         .addToBackStack(null)
                                                         .commit()
-                                                }*/
+                                                }
+
+                                                /* val detailCourseFragment: DetailCourseFragment? =
+                                                     activity!!.fragmentManager
+                                                         .findFragmentById(R.id.fragment_add_course) as DetailCourseFragment?
+
+                                                 if (detailCourseFragment == null) {
+                                                     val newFragment = DetailCourseFragment()
+                                                     newFragment.arguments = bundle
+                                                     fragmentManager!!.beginTransaction()
+                                                         .replace(
+                                                             R.id.navigation_view,
+                                                             newFragment,
+                                                             ""
+                                                         )
+                                                         .addToBackStack(null)
+                                                         .commit()
+                                                 } else {
+                                                     fragmentManager!!.beginTransaction()
+                                                         .replace(
+                                                             R.id.navigation_view,
+                                                             detailCourseFragment,
+                                                             ""
+                                                         )
+                                                         .addToBackStack(null)
+                                                         .commit()
+                                                 }*/
 
                                                 // On long click
                                             } else {

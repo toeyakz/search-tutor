@@ -56,7 +56,7 @@ class CourseTutorAdapter(
               mOnClickList.invoke(myMap, true)
           }
 
-/*        holder.itemView.setOnLongClickListener {
+        holder.itemView.setOnLongClickListener {
             val myMap = HashMap<String, String>()
             myMap["gc_id"] = item[i].gc_id.toString()
             myMap["g_id"] = item[i].g_id.toString()
@@ -66,7 +66,7 @@ class CourseTutorAdapter(
             myMap["gc_price"] = item[i].gc_price.toString()
             mOnClickList.invoke(myMap, false)
             true
-        }*/
+        }
 
     }
 

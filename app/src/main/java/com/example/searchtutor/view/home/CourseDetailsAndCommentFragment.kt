@@ -154,7 +154,7 @@ class CourseDetailsAndCommentFragment : Fragment() {
         imgSendComment!!.setOnClickListener {
             mHomePresenter.addComment(
                 c_id_key,
-                "",
+                user?.t_id.toString(),
                 user?.st_id.toString(),
                 edtComment!!.text.toString(),
                 object : HomePresenter.Response.AddComment {

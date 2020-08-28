@@ -46,7 +46,7 @@ class SettingFragment : Fragment(), View.OnClickListener {
             btnProfile.visibility = View.GONE
         }
         if (user?.type == "tutor") {
-            btnCommentList.visibility = View.VISIBLE
+            btnCommentList.visibility = View.GONE
         } else {
             btnCommentList.visibility = View.GONE
         }
