@@ -76,6 +76,7 @@ data class TutorListResponse(
         val t_tel: Int?,
         val t_address: String?,
         val t_img: String?,
+        val t_tutoring_center: String?,
         val count_course: Int?
     )
 }
@@ -114,9 +115,31 @@ data class StudentResponse(
     val isSuccessful: Boolean,
     val data: List<User>?
 )
-data class ImageReturn (
+
+data class ImageReturn(
     val isSuccessful: Boolean,
     val message: String?
 )
+
+
+////////
+
+data class qa(
+    val type: String,
+    val name: String
+)
+
+val qaList = listOf(
+    qa("หวาน", "โค้ก"),
+    qa("หวาน", "น้ำตาล"),
+    qa("หวาน", "ขนม"),
+    qa("เค็ม", "น้ำปลา"),
+    qa("เค็ม", "ปลาร้า"),
+    qa("เค็ม", "เหลือ")
+)
+
+
+
+
 
 

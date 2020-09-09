@@ -8,11 +8,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.FragmentManager
 import com.example.searchtutor.R
+import com.example.searchtutor.controler.CustomDialog
 import com.example.searchtutor.controler.PreferencesData
 import com.example.searchtutor.controler.Utils
 import com.example.searchtutor.data.response.StudentResponse
@@ -29,12 +28,18 @@ class ProfileFragment : Fragment() {
     private lateinit var mSettingPresenter: SettingPresenter
     private var user: PreferencesData.Users? = null
 
+    private var mDialog = CustomDialog()
+
     private var btnEditProfile: Button? = null
     private var tvType: TextView? = null
     private var tvName: TextView? = null
     private var tvEmail: TextView? = null
     private var tvAddress: TextView? = null
     private var imgProfile: ImageView? = null
+
+    private lateinit var layoutTutoringCenter: LinearLayout
+    private lateinit var tvTutoringCenter: TextView
+    private lateinit var btnEditTutoringCenter: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +62,11 @@ class ProfileFragment : Fragment() {
         tvEmail = root.findViewById(R.id.tvEmail)
         tvAddress = root.findViewById(R.id.tvAddress)
         imgProfile = root.findViewById(R.id.imgProfile)
+        layoutTutoringCenter = root.findViewById(R.id.layoutTutoringCenter)
+        tvTutoringCenter = root.findViewById(R.id.tvTutoringCenter)
+        btnEditTutoringCenter = root.findViewById(R.id.btnEditTutoringCenter)
+
+        setDate()
 
         btnEditProfile!!.setOnClickListener {
             val profileEditFragment: ProfileEditFragment? =
@@ -86,22 +96,22 @@ class ProfileFragment : Fragment() {
         }
 
 
-        setDate()
-
     }
 
     private fun setDate() {
         if (user?.type == "tutor") {
+            layoutTutoringCenter.visibility = View.VISIBLE
             mSettingPresenter.getTutor(
                 user?.t_id.toString(),
                 object : SettingPresenter.Response.Tutor {
                     @SuppressLint("SetTextI18n")
                     override fun value(c: TutorResponse) {
                         if (c.isSuccessful) {
-                            if(c.data!![0].t_img != ""){
-                                Picasso.get().load(Utils.host + "search_tutor/img_profile/" + c.data[0].t_img)
+                            if (c.data!![0].t_img != "") {
+                                Picasso.get()
+                                    .load(Utils.host + "search_tutor/img_profile/" + c.data[0].t_img)
                                     .into(imgProfile)
-                            }else{
+                            } else {
                                 Picasso.get().load(R.drawable.feature_theguest_mario)
                                     .into(imgProfile)
                             }
@@ -111,7 +121,41 @@ class ProfileFragment : Fragment() {
                                 "ชื่อ-นามสกุล : " + c.data[0].t_name + " " + c.data[0].t_lname
                             tvEmail!!.text = "อีเมล : " + c.data[0].t_email
                             tvAddress!!.text = "ที่อยู่ : " + c.data[0].t_address
+                            tvTutoringCenter.text = "ศูนย์ติว : " + c.data[0].t_tutoring_center
+
+                            btnEditTutoringCenter.setOnClickListener {
+                                mDialog.dialogEditExpense(
+                                    requireActivity(),
+                                    "แก้ไขศูนย์ติว",
+                                    c.data[0].t_tutoring_center.toString()
+                                ) { hashmap, b ->
+                                    if (b) {
+                                        mSettingPresenter.updateTutoring(
+                                            c.data[0].t_id.toString(),
+                                            hashmap
+                                        ) { b, t ->
+                                            if (b) {
+                                                Toast.makeText(
+                                                    activity,
+                                                    "บันทึกสำเร็จ!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                setDate()
+                                            } else {
+                                                Toast.makeText(
+                                                    activity,
+                                                    "พบข้อผิดพลาด!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                setDate()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
+
+
                     }
 
                     override fun error(c: String?) {
@@ -119,16 +163,18 @@ class ProfileFragment : Fragment() {
                     }
                 })
         } else {
+            layoutTutoringCenter.visibility = View.GONE
             mSettingPresenter.getStudent(
                 user?.st_id.toString(),
                 object : SettingPresenter.Response.Student {
                     @SuppressLint("SetTextI18n")
                     override fun value(c: StudentResponse) {
                         if (c.isSuccessful) {
-                            if(c.data!![0].st_img != ""){
-                                Picasso.get().load(Utils.host + "search_tutor/img_profile/" + c.data[0].st_img)
+                            if (c.data!![0].st_img != "") {
+                                Picasso.get()
+                                    .load(Utils.host + "search_tutor/img_profile/" + c.data[0].st_img)
                                     .into(imgProfile)
-                            }else{
+                            } else {
                                 Picasso.get().load(R.drawable.feature_theguest_mario)
                                     .into(imgProfile)
                             }

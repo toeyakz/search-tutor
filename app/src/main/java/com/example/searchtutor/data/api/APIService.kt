@@ -86,6 +86,18 @@ interface APIService {
         @Field("course_id") course_id: String
     ): Observable<DeleteCourseResponse>*/
 
+    @POST("search_tutor/service.php?func=updateTutoring")
+    fun updateTutoring(@Body body: RequestBody): Observable<UpdateCourseResponse>
+
+    @POST("search_tutor/service.php?func=register2")
+    fun upLoadRegister(@Body body: RequestBody): Observable<ImageReturn>
+
+    @POST("search_tutor/service.php?func=getAllStudent")
+    fun getAllStudent(): Observable<StudentResponse>
+
+    @POST("search_tutor/service.php?func=getAllTutor")
+    fun getAllTutor(): Observable<TutorResponse>
+
     @POST("search_tutor/service.php?func=setProfileEdit")
     fun upLoadProfile(@Body body: RequestBody): Observable<ImageReturn>
    // fun upLoadProfile(@Body body: UploadProfile): Observable<ImageReturn>

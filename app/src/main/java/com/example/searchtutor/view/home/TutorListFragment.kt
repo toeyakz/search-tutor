@@ -61,6 +61,8 @@ class TutorListFragment : Fragment() {
                                     bundle2.putString("t_id", h["t_id"])
                                     bundle2.putString("t_name", h["t_name"])
                                     bundle2.putString("t_lname", h["t_lname"])
+                                    bundle2.putString("t_lname", h["t_lname"])
+                                    bundle2.putString("t_tutoring_center", h["t_tutoring_center"])
 
                                     val tutorDetailFragment: TutorDetailFragment? =
                                         requireActivity().fragmentManager

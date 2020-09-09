@@ -3,10 +3,16 @@ package com.example.searchtutor.view.login
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.util.Log
 import com.example.searchtutor.controler.Constants
+import com.example.searchtutor.controler.Utils
 import com.example.searchtutor.data.api.DataModule
+import com.example.searchtutor.data.body.UploadProfile
 import com.example.searchtutor.data.model.User
+import com.example.searchtutor.data.response.ImageReturn
 import com.example.searchtutor.data.response.LoginResponse
 import com.example.searchtutor.data.response.RegisterResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,6 +22,8 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
@@ -112,6 +120,124 @@ class LoginPresenter {
         editor.putString("st_phon", user[0].st_phon.toString())
         editor.putString("st_address", user[0].st_address.toString())
         editor.apply()
+    }
+
+    @SuppressLint("CheckResult")
+    fun sendRegister(
+        context: Context,
+        username: String,
+        password: String,
+        name: String,
+        lastName: String,
+        email: String,
+        tel: String,
+        address: String,
+        radioValue: String,
+        imageName: String,
+        res: (Boolean, String) -> Unit
+    ) {
+        val encodedImagePic1: String
+        val uploadImage = ArrayList<UploadProfile.Data>()
+
+        val conTactArray = JSONArray()
+        val root = JSONObject()
+        val contact = JSONObject()
+
+        val file = File(imageName)
+
+        if (file.absolutePath != "") {
+            val myBitmap = BitmapFactory.decodeFile(file.absolutePath)
+
+            if (myBitmap != null) {
+                Log.d("ASd6asd", myBitmap.toString())
+                val byteArrayOutputStream =
+                    ByteArrayOutputStream()
+                myBitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    70,
+                    byteArrayOutputStream
+                )
+                val byteArrayImage =
+                    byteArrayOutputStream.toByteArray()
+                encodedImagePic1 = Base64.encodeToString(
+                    byteArrayImage,
+                    Base64.DEFAULT
+                )
+
+                contact.put("username", username)
+                contact.put("password", password)
+                contact.put("name", name)
+                contact.put("last_name", lastName)
+                contact.put("email", email)
+                contact.put("address", address)
+                contact.put("tel", tel)
+                contact.put("type", radioValue)
+
+                contact.put("name_image", file.name)
+                contact.put("img_base64", "data:image/jpeg;base64,$encodedImagePic1")
+
+                conTactArray.put(0, contact)
+                root.put("data", conTactArray)
+
+            } else {
+
+                contact.put("username", username)
+                contact.put("password", password)
+                contact.put("name", name)
+                contact.put("last_name", lastName)
+                contact.put("email", email)
+                contact.put("address", address)
+                contact.put("tel", tel)
+                contact.put("type", radioValue)
+
+                contact.put("name_image", "")
+                contact.put("img_base64", "")
+
+                conTactArray.put(0, contact)
+                root.put("data", conTactArray)
+
+            }
+
+
+        }
+
+        val rootToString: String = root.toString()
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            rootToString
+        )
+
+        val json: String = Utils().getGson()!!.toJson(body)
+        Log.d("a9a20as8da", json)
+
+
+        DataModule.instance()!!
+            .upLoadRegister(body)
+            .subscribeOn(Schedulers.io())
+            .timeout(20, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<ImageReturn>() {
+                override fun onComplete() {
+
+                }
+
+                override fun onNext(t: ImageReturn) {
+                    if (t.isSuccessful) {
+                        res.invoke(true, t.message.toString())
+                        Log.d("As85das1d", t.message)
+                    } else {
+                        res.invoke(false, t.message.toString())
+                    }
+                }
+
+                @SuppressLint("DefaultLocale")
+                override fun onError(e: Throwable) {
+                    res.invoke(false, e.message.toString())
+                    Log.d("As85das1d", e.message)
+                }
+            })
+
+
     }
 
     @SuppressLint("CheckResult")

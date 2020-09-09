@@ -25,5 +25,7 @@ data class User (
     var t_email: String? = null,
     var t_tel: String? = null,
     var t_address: String? = null,
-    var t_img: String? = null
+    var t_img: String? = null,
+    var t_tutoring_center: String? = null,
+    var t_img_card: String? = null
 )

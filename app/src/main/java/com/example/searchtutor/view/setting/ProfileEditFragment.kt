@@ -76,7 +76,131 @@ class ProfileEditFragment : Fragment() {
         imgChooseImage = root.findViewById(R.id.imgChooseImage)
         imgProfile = root.findViewById(R.id.imgProfile)
 
-        setData()
+        setData2()
+    }
+
+    private fun setData2() {
+        val bundle = arguments
+        if (bundle != null) {
+            if (bundle.getString("type") == "tutor") {
+                mSettingPresenter.getTutor(
+                    bundle.getString("t_id").toString(),
+                    object : SettingPresenter.Response.Tutor {
+                        override fun value(c: TutorResponse) {
+
+                            Picasso.get()
+                                .load(Utils.host + "search_tutor/img_profile/" + c.data!![0].t_img)
+                                .into(imgProfile)
+
+
+                            edtName!!.setText(
+                                c.data[0].t_name
+                            )
+                            edtLastname!!.setText(c.data[0].t_lname)
+                            edtEmail!!.setText(c.data[0].t_email)
+                            edtTel!!.setText(c.data[0].t_tel)
+                            edtAddress!!.setText(c.data[0].t_address)
+
+
+                            btnRegister!!.setOnClickListener {
+                                mSettingPresenter.upLoadBankDetails(
+                                    bundle.getString("type").toString(),
+                                    bundle.getString("t_id").toString(),
+                                    edtName!!.text.toString(),
+                                    edtLastname!!.text.toString(),
+                                    edtEmail!!.text.toString(),
+                                    edtTel!!.text.toString(),
+                                    edtAddress!!.text.toString(),
+                                    c.data[0].t_img.toString(),
+                                    imageName
+                                ) {
+                                    if (it) {
+                                        requireFragmentManager().popBackStack()
+                                        Toast.makeText(
+                                            activity,
+                                            "บันทึกข้อมูลบัญชีสำเร็จ!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            activity,
+                                            "พบข้อผิดพลาด!",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                            .show()
+                                    }
+                                }
+                            }
+
+                        }
+
+                        override fun error(c: String?) {
+
+                        }
+                    })
+            } else {
+
+                mSettingPresenter.getStudent(
+                    bundle.getString("st_id").toString(),
+                    object : SettingPresenter.Response.Student {
+                        override fun value(c: StudentResponse) {
+
+                            Picasso.get()
+                                .load(Utils.host + "search_tutor/img_profile/" + c.data!![0].st_img)
+                                .into(imgProfile)
+
+                            edtName!!.setText(c.data[0].st_name)
+                            edtLastname!!.setText(c.data[0].st_lname)
+                            edtEmail!!.setText(c.data[0].st_email)
+                            edtTel!!.setText(c.data[0].st_phon)
+                            edtAddress!!.setText(c.data[0].st_address)
+
+                            btnRegister!!.setOnClickListener {
+
+                                mSettingPresenter.upLoadBankDetails(
+                                    bundle.getString("type")!!,
+                                    bundle.getString("st_id").toString(),
+                                    edtName!!.text.toString(),
+                                    edtLastname!!.text.toString(),
+                                    edtEmail!!.text.toString(),
+                                    edtTel!!.text.toString(),
+                                    edtAddress!!.text.toString(),
+                                    c.data[0].st_img.toString(),
+                                    imageName
+                                ) {
+                                    if (it) {
+                                        requireFragmentManager().popBackStack()
+                                        Toast.makeText(
+                                            activity,
+                                            "บันทึกข้อมูลบัญชีสำเร็จ!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            activity,
+                                            "พบข้อผิดพลาด!",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                            .show()
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun error(c: String?) {
+
+                        }
+                    })
+            }
+
+            imgChooseImage!!.setOnClickListener {
+                val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(i, PICK_IMAGE)
+            }
+
+        }
+
+
     }
 
     private fun setData() {

@@ -41,6 +41,7 @@ class TutorDetailFragment : Fragment() {
 
 
     private var tvCategory: TextView? = null
+    private var tvTutoringCenter: TextView? = null
     private var tvCountCourse: TextView? = null
     private var tvNameTutor: TextView? = null
     private var rvCourse: RecyclerView? = null
@@ -73,6 +74,7 @@ class TutorDetailFragment : Fragment() {
         mHomePresenter = HomePresenter()
         user = PreferencesData.user(requireActivity())
 
+
         tvCategory = root.findViewById(R.id.tvCategory)
         tvCountCourse = root.findViewById(R.id.tvCountCourse)
         tvNameTutor = root.findViewById(R.id.tvNameTutor)
@@ -82,12 +84,14 @@ class TutorDetailFragment : Fragment() {
         imgSendComment = root.findViewById(R.id.imgSendComment)
         imgProfileTutor = root.findViewById(R.id.imgProfileTutor)
         cardView9 = root.findViewById(R.id.cardView9)
+        tvTutoringCenter = root.findViewById(R.id.tvTutoringCenter)
 
         val bundle = arguments
         if (bundle != null) {
 
             tvNameTutor!!.text =
                 "ชื่อติวเตอร์ : " + bundle.getString("t_name") + " " + bundle.getString("t_lname")
+            tvTutoringCenter!!.text = "ศูนย์ติว: " + bundle.getString("t_tutoring_center")
             mHomePresenter.getGroupCategory(
                 bundle.getString("t_id")!!,
                 object : HomePresenter.Response.CategoryName {
@@ -95,62 +99,77 @@ class TutorDetailFragment : Fragment() {
                     override fun value(c: CategoryNameResponse) {
                         tvCategory!!.text = "หมวดหมู่: " + c.data!![0].ca_name
 
+
                         mHomePresenter.getGroupCourse(c.data[0].g_id.toString(),
                             object : HomePresenter.Response.GroupCourse {
                                 override fun value(c: GroupCourseResponse) {
 
-                                    mHomePresenter.getTutor(c.data!![0].t_id.toString(), object : SettingPresenter.Response.Tutor{
-                                        override fun value(c: TutorResponse) {
-                                            if(c.data!![0].t_img != ""){
-                                                Picasso.get().load(Utils.host+ "search_tutor/img_profile/"+c.data[0].t_img).into(imgProfileTutor)
-                                            }else{
-                                                Picasso.get().load(R.drawable.testimonial_man).into(imgProfileTutor)
+                                    mHomePresenter.getTutor(
+                                        c.data!![0].t_id.toString(),
+                                        object : SettingPresenter.Response.Tutor {
+                                            override fun value(c: TutorResponse) {
+                                                if (c.data!![0].t_img != "") {
+                                                    Picasso.get()
+                                                        .load(Utils.host + "search_tutor/img_profile/" + c.data[0].t_img)
+                                                        .into(imgProfileTutor)
+                                                } else {
+                                                    Picasso.get().load(R.drawable.testimonial_man)
+                                                        .into(imgProfileTutor)
+                                                }
+
                                             }
 
-                                        }
+                                            override fun error(c: String?) {
 
-                                        override fun error(c: String?) {
-
-                                        }
-                                    })
+                                            }
+                                        })
 
 
 
                                     tvCountCourse!!.text =
-                                        "จำนวนคอร์ส: " + c.data!!.size.toString() + " คอร์ส"
+                                        "จำนวนคอร์ส: " + c.data.size.toString() + " คอร์ส"
 
                                     mCourseTutorAdapter =
                                         CourseTutorAdapter(
                                             activity!!,
                                             c.data as ArrayList<GroupCourseResponse.GroupCourse>
                                         ) { h, b ->
-                                                if(b){
-                                                    val bundle22 = Bundle()
-                                                    bundle22.putString("gc_id", h["gc_id"])
-                                                    bundle22.putString("g_id", h["g_id"])
-                                                    bundle22.putString("t_id", h["t_id"])
-                                                    bundle22.putString("gc_name", h["gc_name"])
-                                                    bundle22.putString("gc_detail", h["gc_detail"])
-                                                    bundle22.putString("gc_price", h["gc_price"])
+                                            if (b) {
+                                                val bundle22 = Bundle()
+                                                bundle22.putString("gc_id", h["gc_id"])
+                                                bundle22.putString("g_id", h["g_id"])
+                                                bundle22.putString("t_id", h["t_id"])
+                                                bundle22.putString("gc_name", h["gc_name"])
+                                                bundle22.putString("gc_detail", h["gc_detail"])
+                                                bundle22.putString("gc_price", h["gc_price"])
 
-                                                    val courseDetailsAndCommentFragment: CourseDetailsAndCommentFragment? =
-                                                        requireActivity().fragmentManager
-                                                            .findFragmentById(R.id.fragment_course_detail) as CourseDetailsAndCommentFragment?
+                                                val courseDetailsAndCommentFragment: CourseDetailsAndCommentFragment? =
+                                                    requireActivity().fragmentManager
+                                                        .findFragmentById(R.id.fragment_course_detail) as CourseDetailsAndCommentFragment?
 
-                                                    if (courseDetailsAndCommentFragment == null) {
-                                                        val newFragment = CourseDetailsAndCommentFragment()
-                                                        newFragment.arguments = bundle22
-                                                        requireFragmentManager().beginTransaction()
-                                                            .replace(R.id.navigation_view, newFragment, "")
-                                                            .addToBackStack(null)
-                                                            .commit()
-                                                    } else {
-                                                        requireFragmentManager().beginTransaction()
-                                                            .replace(R.id.navigation_view, courseDetailsAndCommentFragment, "")
-                                                            .addToBackStack(null)
-                                                            .commit()
-                                                    }
+                                                if (courseDetailsAndCommentFragment == null) {
+                                                    val newFragment =
+                                                        CourseDetailsAndCommentFragment()
+                                                    newFragment.arguments = bundle22
+                                                    requireFragmentManager().beginTransaction()
+                                                        .replace(
+                                                            R.id.navigation_view,
+                                                            newFragment,
+                                                            ""
+                                                        )
+                                                        .addToBackStack(null)
+                                                        .commit()
+                                                } else {
+                                                    requireFragmentManager().beginTransaction()
+                                                        .replace(
+                                                            R.id.navigation_view,
+                                                            courseDetailsAndCommentFragment,
+                                                            ""
+                                                        )
+                                                        .addToBackStack(null)
+                                                        .commit()
                                                 }
+                                            }
                                         }
 
                                     rvCourse!!.apply {
@@ -181,7 +200,7 @@ class TutorDetailFragment : Fragment() {
     }
 
     private fun commentViewList() {
-        if(user?.type== "admin"){
+        if (user?.type == "admin") {
             cardView9!!.visibility = View.GONE
         }
         mHomePresenter.getComment(t_id, object : HomePresenter.Response.Comment {

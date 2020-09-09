@@ -1,18 +1,32 @@
 package com.example.searchtutor.view.login
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.searchtutor.R
 import com.example.searchtutor.controler.CustomProgressDialog
+import com.example.searchtutor.data.response.qaList
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_register.*
+import java.io.File
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var mLoginPresenter: LoginPresenter
     private var radioValue: String = ""
     private var dialog: CustomProgressDialog? = null
+
+    private val PICK_IMAGE = 1003
+    private var imageName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +37,21 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun actionOnClick() {
 
+        btnAddImageCard.setOnClickListener {
+            val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(i, PICK_IMAGE)
+        }
+
+        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.radioTutor -> {
+                    constraintLayout5.visibility = View.VISIBLE
+                }
+                R.id.radioUser -> {
+                    constraintLayout5.visibility = View.GONE
+                }
+            }
+        }
 
         btnRegister.setOnClickListener {
             dialog = CustomProgressDialog(this, "กำลังโหลด..")
@@ -42,7 +71,7 @@ class RegisterActivity : AppCompatActivity() {
                 val tel = edtTel.text.toString()
                 val address = edtAddress.text.toString()
 
-                mLoginPresenter.sendDataToServer(
+                mLoginPresenter.sendRegister(
                     this,
                     username,
                     password,
@@ -51,7 +80,8 @@ class RegisterActivity : AppCompatActivity() {
                     email,
                     tel,
                     address,
-                    radioValue
+                    radioValue,
+                    imageName
                 ) { b, t ->
                     val ad: AlertDialog.Builder = AlertDialog.Builder(this)
                     ad.setTitle("พบข้อมผิดพลาด! ")
@@ -90,7 +120,7 @@ class RegisterActivity : AppCompatActivity() {
             ad.show()
             edtUsername.requestFocus()
             return false
-        }else{
+        } else {
             textInputLayout.error = null
         }
 
@@ -141,11 +171,43 @@ class RegisterActivity : AppCompatActivity() {
         } else {
             if (radioTutor.isChecked) {
                 radioValue = "tutor"
+
+                if (imageName == "") {
+                    ad.setMessage("กรุณาแนปรูปบัตรประชาชนก่อน")
+                    ad.show()
+                    radioGroup.requestFocus()
+                    return false
+                } else {
+
+                }
+
             }
             if (radioUser.isChecked) {
                 radioValue = "user"
             }
         }
         return true
+    }
+
+    @SuppressLint("Recycle")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (PICK_IMAGE == requestCode && resultCode == Activity.RESULT_OK) {
+            val pickedImage: Uri = data?.data!!
+
+            val filePath = arrayOf(MediaStore.Images.Media.DATA)
+            val cursor: Cursor = contentResolver.query(pickedImage, filePath, null, null, null)!!
+            cursor.moveToFirst()
+            val imagePath: String = cursor.getString(cursor.getColumnIndex(filePath[0]))
+            imageName = imagePath
+
+            val file = File(imageName)
+
+            tvFileName.text = file.name
+            Picasso.get().load(File(imagePath)).into(btnAddImageCard)
+
+        }
+
+
     }
 }

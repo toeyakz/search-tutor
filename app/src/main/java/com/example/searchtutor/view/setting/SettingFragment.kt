@@ -7,12 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import com.example.searchtutor.R
 import com.example.searchtutor.controler.CustomProgressDialog
 import com.example.searchtutor.controler.PreferencesData
-import com.example.searchtutor.view.home.EditCourseFragment
 import com.example.searchtutor.view.login.LoginActivity
 import com.example.searchtutor.view.main.MainActivity
 
@@ -41,19 +39,34 @@ class SettingFragment : Fragment(), View.OnClickListener {
         val btnLogout: LinearLayout = root.findViewById(R.id.btnLogout)
         val btnCommentList: LinearLayout = root.findViewById(R.id.btnCommentList)
         val btnProfile: LinearLayout = root.findViewById(R.id.btnProfile)
+        val btnListTutor: LinearLayout = root.findViewById(R.id.btnListTutor)
+        val btnListStudent: LinearLayout = root.findViewById(R.id.btnListStudent)
 
-        if(user?.type == "admin"){
-            btnProfile.visibility = View.GONE
-        }
-        if (user?.type == "tutor") {
-            btnCommentList.visibility = View.GONE
-        } else {
-            btnCommentList.visibility = View.GONE
+        when (user?.type) {
+            "admin" -> {
+                btnProfile.visibility = View.GONE
+                btnListTutor.visibility = View.VISIBLE
+                btnListStudent.visibility = View.VISIBLE
+                btnCommentList.visibility = View.GONE
+
+            }
+            "tutor" -> {
+                btnCommentList.visibility = View.GONE
+                btnListTutor.visibility = View.GONE
+                btnListStudent.visibility = View.GONE
+            }
+            else -> {
+                btnCommentList.visibility = View.GONE
+                btnListTutor.visibility = View.GONE
+                btnListStudent.visibility = View.GONE
+            }
         }
 
         btnLogout.setOnClickListener(this)
         btnCommentList.setOnClickListener(this)
         btnProfile.setOnClickListener(this)
+        btnListTutor.setOnClickListener(this)
+        btnListStudent.setOnClickListener(this)
         return root
     }
 
@@ -73,6 +86,63 @@ class SettingFragment : Fragment(), View.OnClickListener {
     @SuppressLint("UseRequireInsteadOfGet")
     override fun onClick(v: View) {
         when (v.id) {
+            R.id.btnListTutor -> {
+
+                val tutorListDetailFragment: TutorListDetailFragment? =
+                    requireActivity().fragmentManager
+                        .findFragmentById(R.id.fragment_tutor_list_detail) as TutorListDetailFragment?
+
+                if (tutorListDetailFragment == null) {
+                    val newFragment = TutorListDetailFragment()
+                    requireFragmentManager().beginTransaction()
+                        .replace(
+                            R.id.navigation_view,
+                            newFragment,
+                            ""
+                        )
+                        .addToBackStack(null)
+                        .commit()
+                } else {
+                    requireFragmentManager().beginTransaction()
+                        .replace(
+                            R.id.navigation_view,
+                            tutorListDetailFragment,
+                            ""
+                        )
+                        .addToBackStack(null)
+                        .commit()
+                }
+
+            }
+
+            R.id.btnListStudent -> {
+                val studentListDetailFragment: StudentListDetailFragment? =
+                    requireActivity().fragmentManager
+                        .findFragmentById(R.id.fragment_student_list_detail) as StudentListDetailFragment?
+
+                if (studentListDetailFragment == null) {
+                    val newFragment = StudentListDetailFragment()
+                    requireFragmentManager().beginTransaction()
+                        .replace(
+                            R.id.navigation_view,
+                            newFragment,
+                            ""
+                        )
+                        .addToBackStack(null)
+                        .commit()
+                } else {
+                    requireFragmentManager().beginTransaction()
+                        .replace(
+                            R.id.navigation_view,
+                            studentListDetailFragment,
+                            ""
+                        )
+                        .addToBackStack(null)
+                        .commit()
+                }
+            }
+
+
             R.id.btnLogout -> {
                 dialog = CustomProgressDialog(activity!!, "กำลังโหลด..")
                 dialog?.show()

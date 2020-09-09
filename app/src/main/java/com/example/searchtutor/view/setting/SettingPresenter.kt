@@ -38,6 +38,110 @@ class SettingPresenter {
             fun value(c: StudentResponse)
             fun error(c: String?)
         }
+
+    }
+
+    @SuppressLint("CheckResult")
+    fun updateTutoring(
+        i_id: String?,
+        h: HashMap<String, String>,
+        function: (Boolean, String) -> Unit
+    ) {
+        try {
+
+            val conTactArray = JSONArray()
+            val root = JSONObject()
+            val contact = JSONObject()
+
+            contact.put("t_id", i_id)
+            contact.put("t_tutoring_center", h["tutoring"])
+
+            conTactArray.put(0, contact)
+            root.put("data", conTactArray)
+
+
+
+            val rootToString: String = root.toString()
+            val body = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"),
+                rootToString
+            )
+
+            val json: String = Utils().getGson()!!.toJson(root)
+            Log.d("a9a20as8da", rootToString)
+
+            DataModule.instance()!!.updateTutoring(body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object :
+                    DisposableObserver<UpdateCourseResponse>() {
+                    override fun onComplete() {
+
+                    }
+
+                    override fun onNext(t: UpdateCourseResponse) {
+                        Log.d("d7s2dfg9sf", t.isSuccessful.toString())
+                        if (t.isSuccessful) {
+                            function.invoke(true, t.message.toString())
+                        } else {
+                            function.invoke(false, t.message.toString())
+                        }
+                    }
+
+                    @SuppressLint("DefaultLocale")
+                    override fun onError(e: Throwable) {
+                        function.invoke(false, e.message.toString())
+                        Log.d("as98a6sasc", e.message.toString() + "2")
+
+                    }
+                })
+
+
+        } catch (e: Exception) {
+            function.invoke(false, e.message.toString())
+            // function.invoke(false, e.message!!)
+            e.printStackTrace()
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    fun getAllStudent(response: Response.Student) {
+        DataModule.instance()!!.getAllStudent()
+            .subscribeOn(Schedulers.io())
+            .timeout(20, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<StudentResponse>() {
+                override fun onComplete() {
+                }
+
+                override fun onNext(t: StudentResponse) {
+                    response.value(t)
+                }
+
+                override fun onError(e: Throwable) {
+                    response.error(e.message)
+                }
+            })
+    }
+
+    @SuppressLint("CheckResult")
+    fun getAllTutor(response: Response.Tutor) {
+        DataModule.instance()!!.getAllTutor()
+            .subscribeOn(Schedulers.io())
+            .timeout(20, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableObserver<TutorResponse>() {
+                override fun onComplete() {
+                }
+
+                override fun onNext(t: TutorResponse) {
+                    response.value(t)
+                }
+
+                override fun onError(e: Throwable) {
+                    response.error(e.message)
+                }
+            })
     }
 
 
@@ -93,20 +197,6 @@ class SettingPresenter {
                 conTactArray.put(0, contact)
                 root.put("data", conTactArray)
 
-
-
-        /*        val uploadData = UploadProfile.Data(
-                    type,
-                    id_,
-                    name,
-                    last_name,
-                    email,
-                    tel,
-                    address,
-                    file!!.name,
-                    "data:image/jpeg;base64,$encodedImagePic1"
-                )
-                uploadImage.add(uploadData)*/
             } else {
 
                 contact.put("type", type)
@@ -122,18 +212,18 @@ class SettingPresenter {
                 conTactArray.put(0, contact)
                 root.put("data", conTactArray)
 
-      /*          val uploadData = UploadProfile.Data(
-                    type,
-                    id_,
-                    name,
-                    last_name,
-                    email,
-                    tel,
-                    address,
-                    img,
-                    "data:image/jpeg;base64,"
-                )
-                uploadImage.add(uploadData)*/
+                /*          val uploadData = UploadProfile.Data(
+                              type,
+                              id_,
+                              name,
+                              last_name,
+                              email,
+                              tel,
+                              address,
+                              img,
+                              "data:image/jpeg;base64,"
+                          )
+                          uploadImage.add(uploadData)*/
             }
 
 

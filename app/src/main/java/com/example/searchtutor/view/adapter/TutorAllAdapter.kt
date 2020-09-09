@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.searchtutor.R
 import com.example.searchtutor.controler.Utils
+import com.example.searchtutor.data.model.User
 import com.example.searchtutor.data.response.CategoryResponse
 import com.example.searchtutor.data.response.GroupCourseResponse
 import com.example.searchtutor.data.response.TutorListResponse
@@ -18,13 +19,13 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TutorListAdapter(
+class TutorAllAdapter(
     val context: Context,
-    var item: ArrayList<TutorListResponse.TutorList>,
+    var item: ArrayList<User>,
     private var mOnClickList: (HashMap<String, String>, Boolean) -> (Unit)
     // private val mCloseLoadPresenter: CloseLoadPresenter
 ) :
-    RecyclerView.Adapter<TutorListAdapter.ViewHolder>() {
+    RecyclerView.Adapter<TutorAllAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
@@ -32,7 +33,7 @@ class TutorListAdapter(
     ): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(viewGroup.context).inflate(
-                R.layout.layout_item_tutor_list,
+                R.layout.layout_item_student_all,
                 viewGroup,
                 false
             )
@@ -46,25 +47,16 @@ class TutorListAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, i: Int) {
 
-        // holder.tvNameCourse.text = item[i].gc_name
-        holder.tvNameTutor.text = item[i].t_name + " " + item[i].t_lname
-        holder.tvCountCourse.text = "จำนวนคอร์ส : " + item[i].count_course
+        holder.tvNameStudent.text = item[i].t_name + " " + item[i].t_lname
+        holder.tvEmail.text = "Email: " + item[i].t_email
 
         Picasso.get()
             .load(Utils.host + "search_tutor/img_profile/" + item[i].t_img)
             .into(holder.imgProfile)
 
-        holder.itemView.setOnClickListener {
+        holder.imgEdit.setOnClickListener {
             val myMap = HashMap<String, String>()
             myMap["t_id"] = item[i].t_id.toString()
-            myMap["t_name"] = item[i].t_name.toString()
-            myMap["t_lname"] = item[i].t_lname.toString()
-            myMap["t_username"] = item[i].t_username.toString()
-            myMap["t_password"] = item[i].t_password.toString()
-            myMap["t_email"] = item[i].t_email.toString()
-            myMap["t_tel"] = item[i].t_tel.toString()
-            myMap["t_address"] = item[i].t_address.toString()
-            myMap["t_tutoring_center"] = item[i].t_tutoring_center.toString()
             mOnClickList.invoke(myMap, true)
         }
 
@@ -87,10 +79,11 @@ class TutorListAdapter(
            notifyDataSetChanged()
        }*/
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvNameTutor: TextView = itemView.findViewById(R.id.tvNameTutor)
-        var tvCountCourse: TextView = itemView.findViewById(R.id.tvCountCourse)
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var tvNameStudent: TextView = itemView.findViewById(R.id.tvNameStudent)
+        var tvEmail: TextView = itemView.findViewById(R.id.tvEmail)
         var imgProfile: ImageView = itemView.findViewById(R.id.imgProfile)
+        var imgEdit: ImageView = itemView.findViewById(R.id.imgEdit)
 
 
     }

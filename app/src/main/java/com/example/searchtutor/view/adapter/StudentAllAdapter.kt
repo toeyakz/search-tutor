@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.searchtutor.R
 import com.example.searchtutor.controler.Utils
+import com.example.searchtutor.data.model.User
 import com.example.searchtutor.data.response.CategoryResponse
 import com.example.searchtutor.data.response.GroupCourseResponse
 import com.example.searchtutor.data.response.TutorListResponse
@@ -18,13 +19,13 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TutorListAdapter(
+class StudentAllAdapter(
     val context: Context,
-    var item: ArrayList<TutorListResponse.TutorList>,
+    var item: ArrayList<User>,
     private var mOnClickList: (HashMap<String, String>, Boolean) -> (Unit)
     // private val mCloseLoadPresenter: CloseLoadPresenter
 ) :
-    RecyclerView.Adapter<TutorListAdapter.ViewHolder>() {
+    RecyclerView.Adapter<StudentAllAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
@@ -32,7 +33,7 @@ class TutorListAdapter(
     ): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(viewGroup.context).inflate(
-                R.layout.layout_item_tutor_list,
+                R.layout.layout_item_student_all,
                 viewGroup,
                 false
             )
@@ -46,27 +47,40 @@ class TutorListAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, i: Int) {
 
-        // holder.tvNameCourse.text = item[i].gc_name
-        holder.tvNameTutor.text = item[i].t_name + " " + item[i].t_lname
-        holder.tvCountCourse.text = "จำนวนคอร์ส : " + item[i].count_course
+        holder.tvNameStudent.text = item[i].st_name + " " + item[i].st_lname
+        holder.tvEmail.text = "Email: " + item[i].st_email
 
         Picasso.get()
-            .load(Utils.host + "search_tutor/img_profile/" + item[i].t_img)
+            .load(Utils.host + "search_tutor/img_profile/" + item[i].st_img)
             .into(holder.imgProfile)
 
-        holder.itemView.setOnClickListener {
+
+        holder.imgEdit.setOnClickListener {
             val myMap = HashMap<String, String>()
-            myMap["t_id"] = item[i].t_id.toString()
-            myMap["t_name"] = item[i].t_name.toString()
-            myMap["t_lname"] = item[i].t_lname.toString()
-            myMap["t_username"] = item[i].t_username.toString()
-            myMap["t_password"] = item[i].t_password.toString()
-            myMap["t_email"] = item[i].t_email.toString()
-            myMap["t_tel"] = item[i].t_tel.toString()
-            myMap["t_address"] = item[i].t_address.toString()
-            myMap["t_tutoring_center"] = item[i].t_tutoring_center.toString()
+            myMap["st_id"] = item[i].st_id.toString()
+            myMap["st_username"] = item[i].st_username.toString()
+            myMap["st_password"] = item[i].st_password.toString()
+            myMap["st_name"] = item[i].st_name.toString()
+            myMap["st_lname"] = item[i].st_lname.toString()
+            myMap["st_email"] = item[i].st_email.toString()
+            myMap["st_phon"] = item[i].st_phon.toString()
+            myMap["st_address"] = item[i].st_address.toString()
+            myMap["st_img"] = item[i].st_img.toString()
             mOnClickList.invoke(myMap, true)
         }
+
+        /*  holder.itemView.setOnClickListener {
+              val myMap = HashMap<String, String>()
+              myMap["t_id"] = item[i].t_id.toString()
+              myMap["t_name"] = item[i].t_name.toString()
+              myMap["t_lname"] = item[i].t_lname.toString()
+              myMap["t_username"] = item[i].t_username.toString()
+              myMap["t_password"] = item[i].t_password.toString()
+              myMap["t_email"] = item[i].t_email.toString()
+              myMap["t_tel"] = item[i].t_tel.toString()
+              myMap["t_address"] = item[i].t_address.toString()
+              mOnClickList.invoke(myMap, true)
+          }*/
 
         /* holder.itemView.setOnLongClickListener {
              val myMap = HashMap<String, String>()
@@ -88,9 +102,10 @@ class TutorListAdapter(
        }*/
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvNameTutor: TextView = itemView.findViewById(R.id.tvNameTutor)
-        var tvCountCourse: TextView = itemView.findViewById(R.id.tvCountCourse)
+        var tvNameStudent: TextView = itemView.findViewById(R.id.tvNameStudent)
+        var tvEmail: TextView = itemView.findViewById(R.id.tvEmail)
         var imgProfile: ImageView = itemView.findViewById(R.id.imgProfile)
+        var imgEdit: ImageView = itemView.findViewById(R.id.imgEdit)
 
 
     }

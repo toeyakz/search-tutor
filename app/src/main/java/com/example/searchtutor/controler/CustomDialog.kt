@@ -7,17 +7,60 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
 import android.media.Image
 import android.os.Build
+import android.text.method.DigitsKeyListener
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import com.example.searchtutor.R
 import kotlinx.android.synthetic.main.custom_alert_dialog.view.*
+import kotlinx.android.synthetic.main.custom_alert_dialog.view.tvTitle
 import kotlinx.android.synthetic.main.custom_alert_dialog02.view.*
+import kotlinx.android.synthetic.main.custom_alert_dialog02.view.btnConfirm
+import kotlinx.android.synthetic.main.dialog_edit_tutoring.view.*
 
 import java.util.HashMap
 
 class CustomDialog {
+
+    fun dialogEditExpense(
+        context: Context,
+        title: String,
+        price: String,
+        callBack: (HashMap<String, String>, Boolean) -> Unit
+    ) {
+        val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_tutoring, null)
+        val mBuilder = AlertDialog.Builder(context)
+            .setView(mDialogView)
+
+        val alertDialog: AlertDialog = mBuilder.create()
+        alertDialog.setCancelable(true)
+
+        // set title
+        mDialogView.tvTitle.text = title
+
+        //set data
+
+        mDialogView.edtTutoring.setText(price)
+
+        val back = ColorDrawable(Color.TRANSPARENT)
+        val inset = InsetDrawable(back, 50)
+        alertDialog.window?.setBackgroundDrawable(inset)
+
+        alertDialog.show()
+
+
+        //กดปุ่่มยืนยัน
+        mDialogView.btnConfirm.setOnClickListener {
+            val myMap = HashMap<String, String>()
+            myMap["tutoring"] = mDialogView.edtTutoring.text.toString()
+            callBack.invoke(myMap, true)
+            alertDialog.dismiss()
+
+
+        }
+    }
+
 
     fun onDialog(
         context: Context,
