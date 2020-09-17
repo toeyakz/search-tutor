@@ -132,6 +132,7 @@ class LoginPresenter {
         email: String,
         tel: String,
         address: String,
+        idCard: String,
         radioValue: String,
         imageName: String,
         res: (Boolean, String) -> Unit
@@ -172,6 +173,7 @@ class LoginPresenter {
                 contact.put("address", address)
                 contact.put("tel", tel)
                 contact.put("type", radioValue)
+                contact.put("idCard", idCard)
 
                 contact.put("name_image", file.name)
                 contact.put("img_base64", "data:image/jpeg;base64,$encodedImagePic1")
@@ -189,6 +191,7 @@ class LoginPresenter {
                 contact.put("address", address)
                 contact.put("tel", tel)
                 contact.put("type", radioValue)
+                contact.put("idCard", idCard)
 
                 contact.put("name_image", "")
                 contact.put("img_base64", "")
@@ -207,7 +210,7 @@ class LoginPresenter {
             rootToString
         )
 
-        val json: String = Utils().getGson()!!.toJson(body)
+        val json: String = Utils().getGson()!!.toJson(rootToString)
         Log.d("a9a20as8da", json)
 
 

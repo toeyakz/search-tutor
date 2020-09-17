@@ -46,9 +46,11 @@ class RegisterActivity : AppCompatActivity() {
             when (checkedId) {
                 R.id.radioTutor -> {
                     constraintLayout5.visibility = View.VISIBLE
+                    textInputLayout86.visibility = View.VISIBLE
                 }
                 R.id.radioUser -> {
                     constraintLayout5.visibility = View.GONE
+                    textInputLayout86.visibility = View.GONE
                 }
             }
         }
@@ -70,6 +72,7 @@ class RegisterActivity : AppCompatActivity() {
                 val email = edtEmail.text.toString()
                 val tel = edtTel.text.toString()
                 val address = edtAddress.text.toString()
+                val idCard = edtIdCard.text.toString()
 
                 mLoginPresenter.sendRegister(
                     this,
@@ -80,6 +83,7 @@ class RegisterActivity : AppCompatActivity() {
                     email,
                     tel,
                     address,
+                    idCard,
                     radioValue,
                     imageName
                 ) { b, t ->
